@@ -1,0 +1,99 @@
+    <!-- Google Tag Manager -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZ3VQG2G"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MZ3VQG2G');</script>
+    <!-- End Google Tag Manager -->
+
+    <div id="cookie-banner" class="full-width" style="display: none;">
+        <p>We use cookies to measure anonymised site visitor numbers and usage, which help us improve user experience. </p> Accept cookies?
+        <button id="accept-btn">Yes</button>
+        <button id="decline-btn">No</button>
+    </div>
+
+    <script>
+        const bannerStyle = 'box'; // Change to 'full-width' for full width banner
+
+        const cookieBanner = document.getElementById('cookie-banner');
+        cookieBanner.classList.remove('full-width', 'box');
+        cookieBanner.classList.add(bannerStyle);
+
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Set default consent state
+        function setDefaultConsent() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+                'analytics_storage': 'denied'
+            });
+        }
+
+        // Initialize Google Analytics
+        function initializeGA() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-059EWJ6910', { 'anonymize_ip': true });
+        }
+
+        // Set default consent state on page load
+        setDefaultConsent();
+
+        if (getCookie('cookieConsent') === null) {
+            setCookie('cookieConsent', 'false', 365); // Default to 'Declined'
+            cookieBanner.style.display = 'block';
+        } else if (getCookie('cookieConsent') === 'true') {
+            initializeGA();
+        }
+
+        document.getElementById('accept-btn').addEventListener('click', function() {
+            setCookie('cookieConsent', 'true', 365);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted'
+            });
+            cookieBanner.style.display = 'none';
+            initializeGA();
+        });
+
+        document.getElementById('decline-btn').addEventListener('click', function() {
+            setCookie('cookieConsent', 'false', 365);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'update', {
+                'analytics_storage': 'denied'
+            });
+            cookieBanner.style.display = 'none';
+        });
+
+        // Load the gtag.js library
+        (function(w,d,s,g,js,fs){
+            g=w.gtag||function(){(g.q=g.q||[]).push(arguments)};
+            g.l=1*new Date();
+            js=d.createElement(s),fs=d.getElementsByTagName(s)[0];
+            js.async=1;
+            js.src='https://www.googletagmanager.com/gtag/js?id=G-059EWJ6910';
+            fs.parentNode.insertBefore(js,fs);
+        }(window,document,'script'));
+    </script>
