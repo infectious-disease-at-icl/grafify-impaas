@@ -1,0 +1,13 @@
+
+  deploy-to-impaas:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: ImPaaS-Deploy
+      id: impaas-deploy
+      uses: /impaas/impaas-deploy@v3
+      with:
+        app-name: grafify
+        deployment-token: ${{secrets.IMPAAS_DEPLOY_TOKEN}}
+        method: PLATFORM
