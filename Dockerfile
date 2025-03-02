@@ -25,8 +25,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
-
-
 # Install required dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
@@ -40,8 +38,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get install -y --no-install-recommends \
     r-base r-base-dev r-recommended && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
 
 # Install NLopt from the official GitHub source
 WORKDIR /tmp
@@ -57,11 +53,10 @@ RUN wget https://github.com/stevengj/nlopt/archive/v2.7.1.tar.gz && \
 # Set default CRAN repository
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org/"))' >> /etc/R/Rprofile.site
 
-RUN R -e "install.packages('nloptr', dependencies=TRUE, type='source')"
 
 
 # Install Shiny R package
-
+RUN R -e "install.packages('nloptr', dependencies=TRUE, type='source')"
 RUN R -e 'install.packages(c("shiny"),)'
 RUN R -e 'install.packages(c("shinydashboard"),)'
 RUN R -e 'install.packages(c("ggplot2"),)'
@@ -80,14 +75,7 @@ RUN R -e 'install.packages(c("remotes"),)'
 RUN R -e 'remotes::install_github("ashenoy-cmbi/grafify@*release")'
 RUN R -e 'install.packages(c("grafify"),)'
 
-
-
-
-# Download and install Shiny Server
-#RUN https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.22.1017-amd64.deb \
-#    && dpkg -i shiny-server-1.5.22.1017-amd64.deb || apt-get install  -yf 
-
-
+# Install shiny server
 RUN wget -O shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.22.1017-amd64.deb \
     && dpkg -i shiny-server.deb \
     && apt-get install -yf \
@@ -96,27 +84,25 @@ RUN wget -O shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/s
 
 # Create a new user 'shinyx' and set permissions
 RUN useradd -m -s /bin/bash shinyx && \
-    mkdir -p /home/shinyx/ShinyApps && \
-    chown -R shinyx:shinyx /home/shinyx/ShinyApps
+    mkdir -p /home/shinyx/shiny-apps && \
+    chown -R shinyx:shinyx /home/shinyx/shiny-apps
 
 # Set working directory to 'geoff' home
-WORKDIR /home/shinyx/ShinyApps
+WORKDIR /home/shinyx/shiny-apps
 
 # Copy the Shiny app into the user directory
-COPY ./grafify_app /home/shinyx/ShinyApps/app
+COPY ./grafify_app /home/shinyx/shiny-apps/app
 
 # Change ownership so 'geoff' has access
-RUN chown -R shiny:shiny /home/shinyx/ShinyApps
+RUN chown -R shiny:shiny /home/shinyx/shiny-apps
 
 # Expose Shiny Server's default port
 EXPOSE 3838
 
-# Switch to user 'shiny' for security
+# Switch to user 'shinyx' for security
 USER shinyx
 
 
 # Run the Shiny app directly with R instead of shiny-server
-CMD ["R", "-e", "shiny::runApp('/home/shinyx/ShinyApps/app', host='0.0.0.0', port=3838)"]
+CMD ["R", "-e", "shiny::runApp('/home/shinyx/shiny-apps/app', host='0.0.0.0', port=3838)"]
 
-# Set bash as the default shell
-#CMD ["/bin/bash"]
