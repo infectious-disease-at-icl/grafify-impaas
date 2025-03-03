@@ -1,9 +1,8 @@
 #This one works with various source files and generates just graphs
 #adding 4d plots #with bin sizes #fixed 4dPointSD #Allows Excel files #QQ & Density & multiFacets #Added images_n_help
 #Errorbar dropdown list #Images for Instructions
-#replated DT with gt package #APP without sidebar
-#parts of the UI spread across 8 src01Panel---.R files
-#Averages of Random Fac levels
+
+#APP without sidebar
 library(grafify)
 library(bslib)   #for theme
 library(bsicons) #for icons
@@ -11,66 +10,51 @@ library(shinyBS) #for BS tooltip
 library(shiny)
 library(shinyWidgets) #for updated shiny
 library(colourpicker) #for single colour
-library(readxl)  #for file upload
+library(readxl)  #for file updoad
 library(readr)   #for file upload
+library(DT)      #for tables
 library(ggplot2) #for facet_grid and others
 library(lmerTest) #for lmerMod
 library(emmeans) #for posthoc comparisons
 library(rlang)   #for !! calls
-library(gt) #for colour tables
-#library(DT)      #for tables
-library(shinyjqui) #for drag and drop
-library(dplyr)
-#for shinylive 
-#library(showtext)
-#font_add("Arial", "www/fonts/arial.ttf")
-#font_add("Courier", "www/fonts/cour.ttf")
-#showtext_auto()
+#library(dplyr)  #
+#library(ggpubr)
 
-########### shiny proxy needs port 3838 ############
-#options(shiny.host = "0.0.0.0") #from YouTube video
-#options(shiny.port = 5000) #from YouTube video
-shiny::addResourcePath('www', '/home/shinyx/shiny-apps/app/www') #from stack for images in docker
-#shiny::addResourcePath('www/favicon', '/srv/shiny-server/www/favicon') #from stack for images in docker
-shiny::addResourcePath('source', '/home/shinyx/shiny-apps/app/source') #for Feb25 onwards with source folder
-
-source("./source/src01c2long_GraphOpts_sidebar_ui.R", local = TRUE) #for fonts, colours, symbols, box/violin transparency, errorbars
+source("src01c2long_GraphOpts_sidebar_ui.R", local = TRUE) #for fonts, colours, symbols, box/violin transparency, errorbars
 #this versin of mainbar has no sidebar & has GraphOpts next to graph card
-source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
-source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
-source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
+source("src01eJ19_mainbar_navbarFluidRows.R", local = TRUE) #also sources src01e_menu_links.R
+source("src01g_Help_n_Images.R", local = TRUE) #For landing page
 
 # Define UI for application that draws a histogram
-ui <- bslib::page_navbar(
+ui <- page_navbar(
   #ga G-059EWJ6910 for shiny.io
   #ga G-TMCF321TZZ for netlify.app
-  tags$head(includeHTML("./source/head_copilot.html")),
-  tags$body(includeHTML("./source/body_copilot.html")), 
+  tags$head(includeHTML("head_copilot.html")),
+  tags$body(includeHTML("body_copilot.html")), 
   #fluid = TRUE,
-  theme = bs_theme(preset = "cosmo",
-                   "navbar-bg" = "#aa4499",
-                   "progress-bar-bg" = "#445eab",
-                   #background colour
-                   #bootswatch = "bootstrap",
-                   version = "5", 
-                   #theme
-                   bg = "#ffffff",
-                   fg = "#121111",
-                   #primary = "#4444ab",
-                   #secondary = "#55224D",
-                   #info = "#44abab",
-                   #success = "#296E13",
-                   #`enable-shadows` = TRUE,  #shinylive
-                   #`enable-rounded` = TRUE,  #shinylive
-                   #base_font = font_face("sans-serif", src = "/fonts"), #shinylive
-                   #code_font = font_face("monospace", src = "/fonts"),  #shinylive
-                   #heading_font = font_face("sans-serif", src = "/fonts") #shinylive
+  theme = bs_theme(
+    "navbar-bg" = "#aa4499",
+    #background colour
+    bootswatch = "bootstrap",
+    #theme
+    bg = "#ffffff",
+    fg = "#121111",
+    primary = "#4444ab",
+    secondary = "#55224D",
+    info = "#44abab",
+    success = "#296E13",
+    `enable-shadows` = TRUE,
+    `enable-rounded` = TRUE,
+    base_font = font_google("IBM Plex Sans"),
+    code_font = font_google("JetBrains Mono"),
+    heading_font = font_google("Roboto Slab"),
+    "progress-bar-bg" = "#445eab"
   ),
   #main title
   title = "grafify online",
   #sidebar for main page
   #main panel with graphs
-  bslib::nav_panel(
+  nav_panel(
     width = 12,
     title = "Graphs and Analysis",
     #main panel sourced from src01 *mainbar* file
@@ -126,8 +110,7 @@ ui <- bslib::page_navbar(
         )
       )
     ), ),
-    mainPanel(mainPanel1, #from src01e_mainbar_navbarFluidRows & src01e_menu_links.R
-              width = 12)
+    mainPanel(mainPanel1, width = 12)
   ),
   #nav_panel(title = ""),
   #main menu bar names and links
@@ -166,7 +149,7 @@ ui <- bslib::page_navbar(
 )
 
 # server logic
-server <- function(input, output, session) {
+server <- function(input, output) {
   #bslib::bs_themer()
   
   #Main uploaded file
@@ -332,10 +315,10 @@ server <- function(input, output, session) {
       label = tooltip(
         trigger = list(
           tags$h3("9.1"),
-          tags$strong("Choose a categorical random variable for mixed effects analysis."),
+          tags$strong("Choose a random variable for mixed effects analysis"),
           bs_icon("info-circle")
         ),
-        "Choose a column from your data. Note: a random intercepts model will be fitted."
+        "Choose a column from your data."
       ),
       data = file1(),
       multiple = FALSE,
@@ -349,10 +332,10 @@ server <- function(input, output, session) {
       v6Input()
   })
   #UI output for Simple/Mixed ANOVA
-  #  output$RandFac <- renderUI({
-  #    if (input$MorS == "Mixed")
-  #      uiOutput("RandFac")
-  #  })
+  output$RandFac <- renderUI({
+    if (input$MorS == "Mixed")
+      uiOutput("RandFac")
+  })
   #UI output if Shapes is yes
   output$addShapes <- renderUI({
     if (input$ShapesOpt == "Yes")
@@ -381,7 +364,7 @@ server <- function(input, output, session) {
   outputOptions(output, "started", suspendWhenHidden = FALSE)
   
   #source file with updated choices of graphs based on variable types
-  source("./source/src01e_GraphTypeChoices.R",
+  source("src01e_GraphTypeChoices.R",
          local = TRUE,
          echo = TRUE)
   
@@ -534,184 +517,154 @@ server <- function(input, output, session) {
     if (Xnum() == FALSE)
       updateNumericInput(inputId = "text_angle", value = 45)
   })
+  #UI output update for textAngle if Histogram or Density plots
+  #observe({
+  #  if(input$graphType %in% c("Histogram plot",
+  #                       "Density plot"))
+  #     updateNumericInput(inputId = "text_angle",
+  #                        value = 0)
+  #})
+  ##UI output update for textAngle if not Histogram or Density plots
+  #observe({
+  #  if(input$graphType %in% c("Boxplot",
+  #                            "Bar graph",
+  #                            "Violin plot",
+  #                            "Point & Errorbar"))
+  #    updateNumericInput(inputId = "text_angle",
+  #                       value = 45)
+  #})
   #Reactive for reordering X groups
   RelevelNames <- reactive({
     #force to factors and levels originally from data
     #get levels within categorical X-axis
     req(file1())
     f <- file1()
-    ############ always on relevel
-    f[[input$varsOne]] <- factor(f[[input$varsOne]], levels = input$varsReLevel)
-    flev <- levels(f[[input$varsOne]])
-    flev
+    observe(input$DoRelevel)
+    if (input$DoRelevel == "Yes")
+      f[[input$varsOne]] <- factor(f[[input$varsOne]], levels = input$varsReLevel)
+    levels(f[[input$varsOne]])
   })
   #UI output text for user about reordering
   output$newRelevel <- renderText({
-    txt <- paste(paste(RelevelNames(), collapse = ", "))
+    txt <- paste("New order of X-axis variables: ",
+                 paste(RelevelNames(), collapse = ", "))
     txt
   })
-  ############## always on Grouping relevel
-  output$newRelevelGp <- renderText({
-    txt <- paste(paste(RelevelNamesGp(), collapse = ", "))
-    txt
-  })
-  RelevelNamesGp <- reactive({
-    #force to factors and levels originally from data
-    #get levels within categorical X-axis
-    req(file1())
-    f <- file1()
-    ############ always on relevel
-    f[[input$varsFour]] <- factor(f[[input$varsFour]], levels = input$varsReLevelGp)
-    flev <- levels(f[[input$varsFour]])
-    flev
-  })
-  
-  
-  #drop levels for X axis & grouping variable, both together
+  #drop levels for X axis and get new table
   RelevelFile1 <- reactive({
     #force to factors and levels originally from data
     #then from user input of groups as newlevels
     #varsReLevel has names of groups from user
     #drop levels not used
     req(file1())
-    ######### relevel with dplyr
-    req(input$varsReLevel, input$varsReLevelGp)
-    observe(input$addVarsOpt)
-    if(is.numeric(file1()[[input$varsOne]]) || 
-       is.numeric(file1()[[input$varsFour]]) ) {
-      return(file1())
+    f <- file1()
+    observe(input$DoRelevel)
+    if (Xnum() == TRUE) {
+      f <- file1()
     }
-    file1() %>% 
-      filter(get(input$varsOne) %in% input$varsReLevel,
-             get(input$varsFour) %in% input$varsReLevelGp) %>% 
-      mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)),
-             across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))
-    })
-  
-  ############## reactive for XYCatGp
-  RelevelFile1.2 <- reactive({
-    #force to factors and levels originally from data
-    #then from user input of groups as newlevels
-    #varsReLevel has names of groups from user
-    #drop levels not used
-    req(file1())
-    ######### relevel with dplyr
-    req(input$varsReLevelGp)
-    observe(input$addVarsOpt)
-    file1() %>% 
-      filter(get(input$varsFour) %in% input$varsReLevelGp) %>% 
-      mutate(across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))
+    if (input$DoRelevel == "No" &
+        Xnum() == FALSE) {
+      f[[input$varsOne]] <- factor(f[[input$varsOne]], levels = XlevelNames())
+    }
+    if (input$DoRelevel == "Yes" &
+        Xnum() == FALSE) {
+      f[[input$varsOne]] <- factor(f[[input$varsOne]], levels = input$varsReLevel)
+      newLevels <- droplevels(f[[input$varsOne]])
+      f <- subset(f, f[[input$varsOne]] == newLevels)
+    }
+    f
   })
   
-  ######### reactive when there is no Grouping variable 
-  #drop levels for X axis and get new table
-  RelevelFile1.1 <- reactive({
-    #force to factors and levels originally from data
-    #then from user input of groups as newlevels
-    #varsReLevel has names of groups from user
-    #drop levels not used
-    req(file1())
-    ######### relevel with dplyr
-    req(input$varsReLevel)
-    if(is.numeric(file1()[[input$varsOne]]) ) {
-      return(file1())
-    }
-    file1() %>% 
-      filter(get(input$varsOne) %in% input$varsReLevel) %>% 
-      mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)))
-  })
-  ########
   #reactive to make user table
   tabInput <- eventReactive(input$startBtn, {
     file2 <- file1()
     yname <- colnames(file2)[colnames(file2) == input$varsTwo]
     n <- length(colnames(file2))
-    gt(file2) %>% 
-      fmt_auto() %>%
-      cols_align(
-        align = "center",
-        columns = everything()) %>%
-      opt_interactive()
+    DT::formatRound(DT::datatable(file2, options = list(columnDefs = list(
+      list(className = 'dt-left', targets = 1:n)
+    ))),
+    digits = 3,
+    columns = yname)
   })
   #UI output of user table
-  output$mytable2 <- render_gt({
+  output$mytable2 <- DT::renderDataTable({
     h3("Your data table")
     br()
     tabInput()
   })
   
   #source options for point_sd, errorbars, single colour
-  source("./source/src01f_Optional_GraphSettings.R", local = TRUE)
+  source("src01f_Optional_GraphSettings.R", local = TRUE)
   #source help for tab panels & instructions menu option
-  source("./source/src02_headers_help.R", local = TRUE, echo = TRUE)
+  source("src02_headers_help.R", local = TRUE, echo = TRUE)
   #source of emmeans calls
-  source("./source/src03b_emmeans.R", local = TRUE, echo = TRUE)
+  source("src03b_emmeans.R", local = TRUE, echo = TRUE)
   #source of ANOVA and Residuals plots calls
-  source("./source/src03d_anova_n_residuals_SimpMixed.R",
+  source("src03d_anova_n_residuals_SimpMixed.R",
          local = TRUE,
          echo = TRUE)
   #source graph types without/with shapes & faceting
-  source("./source/src04_boxplot_n_save.R",
+  source("src04_boxplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src05_barplot_n_save.R",
+  source("src05_barplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src05b_pointSD_plot_n_save.R",
+  source("src05b_pointSD_plot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src06_matchplot_n_save.R",
+  source("src06_matchplot_n_save.R",
          local = TRUE,
          echo = TRUE)
   
-  source("./source/src08_violinplot_n_save.R",
+  source("src08_violinplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src09_befafterplot_n_save.R",
+  source("src09_befafterplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src10a_3dviolinplot_n_save.R",
+  source("src10a_3dviolinplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src10b_3dboxplot_n_save.R",
+  source("src10b_3dboxplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src10c_3dbarplot_n_save.R",
+  source("src10c_3dbarplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src10d_3dpointSDplot_n_save.R",
+  source("src10d_3dpointSDplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11a_4dBoxplot_n_save.R",
+  source("src11a_4dBoxplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11b_4dShapesBoxplot_n_save.R",
+  source("src11b_4dShapesBoxplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11c_4dBarplot_n_save.R",
+  source("src11c_4dBarplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11d_4dShapesBarplot_n_save.R",
+  source("src11d_4dShapesBarplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11e_4dViolinplot_n_save.R",
+  source("src11e_4dViolinplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11f_4dShapesViolinplot_n_save.R",
+  source("src11f_4dShapesViolinplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11g_4dPointplot_n_save.R",
+  source("src11g_4dPointplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src11h_4dShapesPointpoint_n_save.R",
+  source("src11h_4dShapesPointpoint_n_save.R",
          local = TRUE,
          echo = TRUE)
   #source with tooltips for i icons
-  source("./source/src12_tooltips.R", local = TRUE)
-  source("./source/src13_numericXYplot_n_save.R",
+  source("src12_tooltips.R", local = TRUE)
+  source("src13_numericXYplot_n_save.R",
          local = TRUE,
          echo = TRUE)
-  source("./source/src14_DensityHistogram_plot_n_save.R",
+  source("src14_DensityHistogram_plot_n_save.R",
          local = TRUE,
          echo = TRUE)
   
@@ -720,51 +673,69 @@ server <- function(input, output, session) {
   whichplotChosenGraph <- eventReactive(input$makegraph, {
     #boxplot w & w/o facets
     if (input$graphType == "Boxplot" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "No")
       p <- plotBox_react()
+    if (input$graphType == "Boxplot"  &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plotBox_react()
     #bar graph w & w/o facets
     if (input$graphType == "Bar graph" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "No")
       p <- plotBar_react()
+    if (input$graphType == "Bar graph"  &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plotBar_react()
     #violin graph w & w/o facets
     if (input$graphType == "Violin plot"  &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "No")
       p <- plotViolin_react()
-    #pointSD
-    if (input$graphType == "Point & Errorbar" &
-        input$addVarsOpt == "No" &
-        input$ShapesOpt == "No")
-      p <- plotPointSD_react()
-    
+    if (input$graphType == "Violin plot"  &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plotViolin_react()
     #befafter graph w & w/o facets
     if (input$graphType == "Before-after plot"  &
-        input$addVarsOpt == "No" &
-        input$ShapesOpt == "Yes")
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "No")
       p <- plotBefAfter_react()
-    
+    if (input$graphType == "Before-after plot" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plotBefAfter_react()
     #3dBox graphs w & w/o facets
     if (input$graphType == "Boxplot" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "Yes")
       p <- plot3dBox_react()
+    if (input$graphType == "Boxplot" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot3dBox_react()
     #3dViolin graphs w & w/o facets
     if (input$graphType == "Violin plot" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "Yes")
       p <- plot3dViolin_react()
+    if (input$graphType == "Violin plot" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot3dViolin_react()
     #3dBar graphs w & w/o facets
     if (input$graphType == "Bar graph" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "Yes")
       p <- plot3dBar_react()
+    if (input$graphType == "Bar graph" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot3dBar_react()
     #3dpoint graphs w & w/o facets
     if (input$graphType == "Point & Errorbar" &
-        input$addVarsOpt == "No" &
         input$ShapesOpt == "Yes")
-     p <- plot3dPoint_react()
+      p <- plot3dPoint_react()
+    if (input$graphType == "Point & Errorbar" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot3dPoint_react()
     
     #4dbox w/ w/o shapes (w/o facets)
     if (input$graphType == "Boxplot" &
@@ -775,14 +746,38 @@ server <- function(input, output, session) {
         input$addVarsOpt == "Yes" &
         input$ShapesOpt == "No")
       p <- plot4dBox_react()
+    #4dbox w w/o shapes (w/ facets)
+    if (input$graphType == "Boxplot" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dShapesBox_react()
+    if (input$graphType == "Boxplot" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dBox_react()
+    #4dbar w/ w/o shapes (w/ facets)
+    if (input$graphType == "Bar graph" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dShapesBar_react()
+    if (input$graphType == "Bar graph" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dBar_react()
     #4dbar w/ w/o shapes (wo/ facets)
     if (input$graphType == "Bar graph" &
         input$addVarsOpt == "Yes" &
-        input$ShapesOpt == "Yes")
+        input$ShapesOpt == "Yes"&
+        input$facetingOpt == "No")
       p <- plot4dShapesBar_react()
     if (input$graphType == "Bar graph" &
         input$addVarsOpt == "Yes" &
-        input$ShapesOpt == "No")
+        input$ShapesOpt == "No"&
+        input$facetingOpt == "No")
       p <- plot4dBar_react()
     #4dviolin w/ w/o shapes (w/o facets)
     if (input$graphType == "Violin plot" &
@@ -793,29 +788,84 @@ server <- function(input, output, session) {
         input$addVarsOpt == "Yes" &
         input$ShapesOpt == "No")
       p <- plot4dViolin_react()
-      #4dbar w/ w/o shapes (wo/ facets)
+    #4dviolin w w/o shapes (w/ facets)
+    if (input$graphType == "Violin plot" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dShapesViolin_react()
+    if (input$graphType == "Violin plot" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dViolin_react()
+    
+    #4dpoint w/ w/o shapes (w/ facets)
     if (input$graphType == "Point & Errorbar" &
         input$addVarsOpt == "Yes" &
-        input$ShapesOpt == "Yes" )
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dShapesPoint_react()
+    if (input$graphType == "Point & Errorbar" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot4dPoint_react()
+    #4dbar w/ w/o shapes (wo/ facets)
+    if (input$graphType == "Point & Errorbar" &
+        input$addVarsOpt == "Yes" &
+        input$ShapesOpt == "Yes" &
+        input$facetingOpt == "No")
       p <- plot4dShapesPoint_react()
     if (input$graphType == "Point & Errorbar" &
         input$addVarsOpt == "Yes" &
-        input$ShapesOpt == "No" )
+        input$ShapesOpt == "No" &
+        input$facetingOpt == "No")
       p <- plot4dPoint_react()
     
     #XY numeric catGroup
     if (input$graphType == "Numeric XY 1" &
-        input$addVarsOpt == "Yes")
+        input$addVarsOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot_XYCat_react()
+    if (input$graphType == "Numeric XY 1" &
+        input$addVarsOpt == "Yes" &
+        input$facetingOpt == "No")
       p <- plot_XYCat_react()
+    #XY numeric nuGroup
     if (input$graphType == "Numeric XY 2" &
-        input$addVarsOpt == "Yes")
+        input$addVarsOpt == "Yes" &
+        input$facetingOpt == "Yes")
+      p <- fac_plot_XYNum_react()
+    if (input$graphType == "Numeric XY 2" &
+        input$addVarsOpt == "Yes" &
+        input$facetingOpt == "No")
       p <- plot_XYNum_react()
-    
     #Density & Histogram
-    if (input$graphType == "Density plot")
+    if (input$graphType == "Density plot"  &
+        input$facetingOpt == "Yes")
+      p <- fac_plotDensity_react()
+    if (input$graphType == "Density plot" &
+        input$facetingOpt == "No")
       p <- plotDensity_react()
-    if (input$graphType == "Histogram plot" )
+    if (input$graphType == "Histogram plot" &
+        input$facetingOpt == "Yes")
+      p <- fac_plotHistogram_react()
+    if (input$graphType == "Histogram plot" &
+        input$facetingOpt == "No")
       p <- plotHistogram_react()
+    
+    #pointSD
+    if (input$graphType == "Point & Errorbar" &
+        input$addVarsOpt == "No" &
+        input$facetingOpt == "Yes" &
+        input$ShapesOpt == "No")
+      p <- fac_plotPointSD_react()
+    if (input$graphType == "Point & Errorbar" &
+        input$addVarsOpt == "No" &
+        input$facetingOpt == "No" &
+        input$ShapesOpt == "No")
+      p <- plotPointSD_react()
     
     #output reactive graph p
     p
@@ -825,21 +875,11 @@ server <- function(input, output, session) {
   
   #add single colour on chosen graph
   PlotSingCol <- eventReactive(input$makegraph, {
-    ifelse(input$facetingOpt == "Yes",
-           p <- whichplotChosenGraph() +
-             facet_grid(FacVars(),
-                        scales = input$facet_scales),
-           p <- whichplotChosenGraph())
-    if(input$addVarsOpt == "Yes" & 
-       Xnum() == FALSE & 
-       CatGp() == TRUE){singColnum <- CatGplevels()}
-    if(input$addVarsOpt == "No" & 
-       Xnum() == FALSE) {singColnum <- Xlevels()}
-    ifelse (input$colPick == "No" ,
-            p <- p,
-            p <- p +
-              scale_fill_manual(values = rep(input$colPick2, 
-                                             times = singColnum)))
+    if (input$colPick == "No")
+      p <- whichplotChosenGraph()
+    if (input$colPick == "Yes")
+      p <- whichplotChosenGraph() +
+        scale_fill_manual(values = rep(input$colPick2, times = Xlevels()))
     p
   })
   
@@ -862,11 +902,7 @@ server <- function(input, output, session) {
       )
     }
   )
-  
-  #for Inno
-  session$onSessionEnded(function() {
-    stopApp()
-  })
+  # Update file 'date creation'
 }
 
 # Run the application
