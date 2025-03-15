@@ -95,8 +95,7 @@ WORKDIR /home/shinyx/shiny-apps
 
 # Copy the Shiny app into the user directory
 COPY ./grafify_app /home/shinyx/shiny-apps/app
-COPY ./grafify_app/www /home/shinyx/shiny-apps/app/www
-COPY ./grafify_app/source /home/shinyx/shiny-apps/app/source
+
 
 RUN chown -R shiny:shiny /home/shinyx/shiny-apps
 
