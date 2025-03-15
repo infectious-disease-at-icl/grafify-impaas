@@ -551,7 +551,7 @@ output$Instr_Data <- renderText({ #in use
         tags$img(
           src = "shiny7_long_table.png",
           align = "left",
-          width = "70%"
+          width = "50%"
         ),
         tags$h6(
           "The data table should be long-format with one variable (either categorical or numeric) per column. Note that columns with numbers are automatically assumed to be numeric. If you have a column to indicate Experiment 1, 2, 3, and so on, enter them as Exp_1, Exp_2 etc. so that R 'reads' them as categorical variables. The random variable for mixed effects analyses should be a categorical variable. It is easy to add another variable as another column."
@@ -563,7 +563,7 @@ output$Instr_Data <- renderText({ #in use
         tags$img(
           src = "shiny8_wide_table.png",
           align = "left",
-          width = "100%"
+          width = "60%"
         ),
         tags$h6(
           "In this case, data spread across multiple columns, and the hierarchy in data is apparent only after scanning across columns. Adding another variable makes the table even more 'wider'."
@@ -783,17 +783,28 @@ output$Instr_ANOVA <- renderText({ #in use
         tags$img(
           src = "shiny7_long_table.png",
           align = "left",
-          width = "70%"
+          width = "50%"
         ),
         tags$ul(
           tags$li("In this example data set, one ", tags$strong("Fixed factor"), " is ", tags$strong("Treatment"), ", which has ", tags$strong("two groups or levels"), "'Untreated' and 'Drug'."),
           tags$li("There is also a second ", tags$strong("Fixed factor"), ", which is", tags$strong("Genotype"), " with ", tags$strong("two levels"), ", i.e., WT & KO."),
           tags$li("These experiments were performed as randomised blocks, wherein 'Untreated' and 'Drug' samples were compared side-by-side for WT and KO cells. This experimental set up is indicated by the variable", tags$strong("Experiment_num"), "which in this case and similar experimental designs is the ", tags$strong("Random factor (Box 9.1)", "for linear mixed effects linear analysis.")),
-          tags$li("Further, to increase the precision of the measurement of 'Cell_viability_percent' within each independent experimental repeat, two technical replicates were also used. This is indicated in the variable ", tags$strong("Tech_Rep_num"), ", e.g., Expt1 has data for 'Cell_viability_percent' from TechRep1 and TechRep2.", tags$strong("As these kinds of technical replicates are not statistically independent,  these should be averaged before proceeding to avoid pseudoreplication.")),
-          tags$li("Alternatively, more advanced mixed effects models can be used in R, which are not available in `grafify` online. However, the results will `grafify` online will not differ too much, especially for balanced designs, i.e., with same number of observations in all groups."),
-          tags$li("For simplicity, `grafify` will ", tags$strong("average replicates within levels of the Random factor chosen in Box 9.1"), "before fitting a random intercepts mixed effects model."),
-          tags$li("To ensure this is performed correctly, in this example and similar experimental data prepared as the table above, the ", tags$strong("Random factor chosen in Box 9.1"), "should be ", tags$strong("Experiment_num"), ". Choosing 'Technical_rep_num' as Random variable will ", tags$strong("give the wrong result"), "."),
-          tags$li("You may also choose to average technical replicates and only use means from independent experiments in the data set uploaded to `grafify` (preferred method).")
+          tags$li("Sometimes, to increase the precision of the measurement of 'Cell_viability_percent' within each independent experimental repeat, we may use one or more technical replicates. This is indicated in the variable ", tags$strong("Tech_Rep_num"), ", e.g., Expt1 has data for 'Cell_viability_percent' from TechRep1 and TechRep2.", tags$strong("As these kinds of technical replicates are not statistically independent,  these should be averaged before proceeding to avoid pseudoreplication.")),
+          tags$li(
+            "`Technical_rep_num` should be averaged per experiment, otherwise this could lead to ", tags$strong("pseudoreplication"), " in the data. "
+          ),
+          tags$br(),
+          layout_columns(col_widths = 12, card("", tagList(
+            #h4("Types of graphs with grafify"),
+            tags$img(
+              src = "shiny7_long_table_techs.png",
+              align = "left",
+              width = "70%"
+            )))),
+            tags$li("For simplicity, `grafify` will ", tags$strong("average replicates within levels of the Random factor chosen in Box 9.1"), "grouped by Fixed factors selected in Boxes 1-3 before fitting a random intercepts mixed effects model. This is done to avoid pseudoreplication, which poses a higher risk than loosing information on variability of technical replicates within experiments."),
+            tags$li("To ensure this is performed correctly, in this example and similar experimental data prepared as the table above, the ", tags$strong("Random factor chosen in Box 9.1"), "should be ", tags$strong("Experiment_num"), ". Choosing 'Technical_rep_num' as Random variable will ", tags$strong("give the wrong result"), "."),
+            tags$li("Ideally, you should average technical replicates and only use means from independent experiments in the data set uploaded to `grafify`."),
+            tags$li("Alternatively, more advanced mixed effects models can be used in R, which are not available in `grafify` online.")
         )
         ))),
       tags$li(
@@ -812,7 +823,7 @@ output$Instr_ANOVA <- renderText({ #in use
         "If you change variables for graphs or analyses, i.e., if you change variables chosen in Boxes 1-3 and 7, remember to click ", tags$strong("'Variables chosen'"), "afterwards. Graphs and analyses do not automatically update when these options are changed."
       ),
       tags$li(
-        "Analyses can be Simple or Mixed effects linear models. The random variable can be selected on the ANOVA tab in ", tags$strong("Box 9.1"), ". Only one Random variable can be chosen in `grafify` online. This is typically a categorical variable that shows hierarchy within data, e.g., experimental blocks, subject matching, repeated-measures over time. It is best to ensure that only statistically independent data points are included in the table. ", tags$strong("Using linear mixed effects analysis  does not automatically fix issues such as pseudoreplication and may not always be appropriate.")
+        "Analyses can be Simple or Mixed effects linear models. The random variable can be selected on the ANOVA tab in ", tags$strong("Box 9.1"), ". Only one Random variable can be chosen in `grafify` online. This is typically a categorical variable that shows hierarchy within data, e.g., experimental blocks, subject matching, repeated-measures over time. It is best to ensure that only statistically independent data points are included in the table. ", tags$strong("Using linear mixed effects analysis  does not automatically fix issues such as pseudoreplication. It is up to the user to ensure that data are correctly entered.")
       ),
       tags$li(
         "A QQ plot (quantile-quantile) plot of model residuals is useful to see whether there is significant deviation from approximately normal distribution. If residuals are highly skewed, the linear model may not be a good fit to the model and therefore unreliable. You could consider transforming the response variable, e.g., log, squares, square-roots."
