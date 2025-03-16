@@ -64,7 +64,7 @@ Panel_Graphs <- list(fluidRow(
                   class = "d-flex justify-content-between",
                   tooltip(
                     bs_icon("info-circle"),
-                    "Select options here and click 'grafify my data' to update the #graph."
+                    "Select options here and click 'grafify my data' to update the graph."
                   )
                 )
               )

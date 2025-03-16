@@ -207,7 +207,7 @@ Panel_Anova <- list(
             class = "d-flex justify-content-between",
             tooltip(
               bs_icon("info-circle"),
-              "Table that was Simple or Mixed effects analyses."
+              "Table showing data used for Simple or Mixed effects analyses."
             )
           )
         ),
