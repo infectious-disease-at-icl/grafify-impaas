@@ -232,11 +232,11 @@ sidebar_panel1 <- list(layout_columns(fluidRow(
             value = 1,
             min = 0, step = 0.1,
             max = 1
-          ),
-          uiOutput("vio_alpha")
+          )
         )
       )
-    )                  #violin transparency option
-    
+    ),                  #violin transparency option
+    conditionalPanel("input.graphType == input.graphType == 'Violin plot'",
+                     uiOutput("vio_alpha")) 
   )
 )))
