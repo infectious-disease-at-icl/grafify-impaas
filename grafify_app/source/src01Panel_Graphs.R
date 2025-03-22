@@ -36,7 +36,7 @@ Panel_Graphs <- list(fluidRow(
       card(card_header(
           actionBttn(
             inputId = "makegraph",
-            label = "grafify my data",
+            label = tags$strong("grafify my data"),
             width = "10px",
             size = "sm",
             color = "royal",

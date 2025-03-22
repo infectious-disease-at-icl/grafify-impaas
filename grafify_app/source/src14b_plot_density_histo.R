@@ -1,3 +1,5 @@
+#sourced in src14_DensityHistogram_plot_n_save
+
 plot_density_log <- function(data, ycol, group, facet,  c_alpha = 0.2, TextXAngle = 0, LogYTrans, LogYBreaks = waiver(), Ylabels = waiver(), LogYLimits = NULL, facet_scales = "fixed", fontsize = 20, linethick, ColPal = c("okabe_ito", "all_grafify", "bright",  "contrast",  "dark",  "fishy",  "kelly",  "light",  "muted",  "pale",  "r4",  "safe",  "vibrant"), ColSeq = TRUE, ColRev = FALSE, ...){
   if(missing(linethick)) {linethick = fontsize/22}
   ColPal <- match.arg(ColPal)

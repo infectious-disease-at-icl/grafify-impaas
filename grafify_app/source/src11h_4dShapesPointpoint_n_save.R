@@ -14,7 +14,7 @@ plot4dShapesPoint_react <- reactive({
                        all_jitter = input$sym_jitter,
                        all_alpha = input$pointAllalpha, 
                        all_size = input$pointAllsize, 
-                       all_shape = input$pointAllshape, 
+                       #all_shape = input$pointAllshape, 
                        TextXAngle = input$text_angle,
                        fontsize = input$font_size,
                        ColSeq = input$colSeq,

@@ -33,6 +33,26 @@ Panel_Anova <- list(
         )
       ),
       column(4, htmlOutput("varsel6")),
+      column(4, 
+             conditionalPanel(
+               "input.MorS == 'Mixed'",  
+             selectizeInput(
+               "AvgRF",
+               multiple = FALSE,
+               #Average RF or not
+               label = tooltip(
+                 trigger = list(
+                   tags$h3("9"),
+                   tags$strong("Choose whether to average replicates grouped by fixed and random factors."),
+                   bs_icon("info-circle")
+                 ),
+                 "If a Random factor is selected, you can choose to average replicates within the levels of this variable or not."
+               ),
+               choices = c("Choose one" =
+                             "", c("Yes", "No")),
+               selected = "Yes",
+               options = list(dropdownParent = 'body')
+             ))),
       #Random factor choice varsSix
       #empty columns for formatting
       column(12),
@@ -50,8 +70,8 @@ Panel_Anova <- list(
         )
       ),
       column(6,
-             conditionalPanel(condition = "input.MorS == 'Mixed'", 
-                              HTML("Replicates, if any, within levels of Random factor will be averaged and their means used for a random intercepts model."))),
+             conditionalPanel(condition = "input.MorS == 'Mixed' && input.AvgRF == 'Yes'", 
+                              HTML("Replicates, if any, within levels of the Random Factor, grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, will be averaged and their means used to fit a random intercepts model."))),
     )
   ))),
   fluidRow(
@@ -82,7 +102,8 @@ Panel_Anova <- list(
         column(
           10,
           #conditional panel for faceted plot
-          conditionalPanel(condition = "input.MorS == 'Mixed'", plotOutput("avgRandFplot", height = "40vw"))
+          conditionalPanel(condition = "input.MorS == 'Mixed' && input.AvgRF == 'Yes'", 
+                           plotOutput("avgRandFplot", height = "40vw"))
         )
         )
     ))          #Plot faceted by random factor

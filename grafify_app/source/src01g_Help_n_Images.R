@@ -3,7 +3,7 @@ mainPanel2.1 <- list(layout_columns(col_widths = 12, #used in src_02_headers_hel
                                        tagList(#h4("Types of graphs with grafify"),
                                          tags$img(src="shiny1_all_graphs.png", 
                                                   align="left", 
-                                                  width="80%"),
+                                                  width="90%"),
                                          tags$ul(
                                            tags$li("The types of graphs available depend on the type of variables (cateogrical or numeric)."),
                                            tags$li("For categorical X-axis variables, the following graphs are possible with all data points shown by default and different wasy of depicting the central tendancy (e.g., median or mean) and dispersion (e.g., whiskers, SD, SEM or CI95 errorbars):"),

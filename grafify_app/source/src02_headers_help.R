@@ -11,10 +11,14 @@ output$dataHelpOpen <- renderText({ #in use on landing page
       ),
       tags$li(
         "Then select options in dropdown",
-        tags$strong(" Boxes 1-10 "),
-        "for Graphs and Analyses. Remember to click appropriate action buttons to see graphs and analyses results ",
+        tags$strong(" Boxes 1-10"),
+        "for Graphs and Analyses."),
+        tags$li("Remember to choose Yes/No in", 
+                tags$strong("Boxes 3, 4 and 5"), 
+                "before proceeding, otherwise there will be an error."),
+        tags$li("Remember to click appropriate action buttons to see graphs and analyses results. These are: ",
         tags$strong(
-          "(e.g., 'Variables chosen', 'grafify my data', 'Analyse my data')"
+          "'Variables chosen', 'grafify my data', 'Analyse my data'"
         ),
         "."
       ),
@@ -86,8 +90,9 @@ output$graphsHelpOpen <- renderText({ #in use on Graphs landing
         tags$strong("Box 8"),
         "."
       ),
+      tags$li("Order of groups can be changed or some groups dropped from the graph and analyses."),
       tags$li(
-        "For analyses, go to the ANOVAs and Comparisons tab for ",
+        "For linear model fitting, go to the ANOVAs and Comparisons tab and choose options in ",
         tags$strong("Boxes 9-10"),
         "."
       )
@@ -104,7 +109,7 @@ output$ANOVAsHelpOpen <- renderText({ #in use on ANOVA landing
       ),
       tags$li(
         tags$strong("Box 9"),
-        "allows you to choose the type of analysis (Simple/Mixed effects). Results will appear only after making a selection and clicking ",
+        "allows you to choose the type of analysis (Simple/Mixed effects). Results will appear after making a selection and clicking ",
         tags$strong("'Analyse my data'"),
         "."
       ),
@@ -112,7 +117,9 @@ output$ANOVAsHelpOpen <- renderText({ #in use on ANOVA landing
         "Graphs of model residuals will be shown as a QQ plot and a Density plot."
       ),
       tags$li(
-        "If you choose 'Mixed', you need to also choose a random factor, e.g., experimental blocks, matching, pairing, repeated-measures. The random factor should be a categorical variable, otherwise the analyses will fail. A graph of your data faceted by the random factor will be displayed."
+        "If you choose 'Mixed', you need to also choose a random factor, e.g., experimental blocks, matching, pairing, repeated-measures. A graph of your data faceted by the random factor will be displayed."),
+      tags$li("You can also choose whether values within levels of the random factor are averaged in ",
+              tags$strong("Box 9.2")
       ),
       tags$li(
         "After the analyses, if you change variables again in ",

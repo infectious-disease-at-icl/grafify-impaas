@@ -10,7 +10,7 @@ plot3dPoint_react <- reactive({
                        all_jitter = input$sym_jitter,
                        all_alpha = input$pointAllalpha, 
                        all_size = input$pointAllsize, 
-                       all_shape = input$pointAllshape, 
+                       #all_shape = input$pointAllshape, 
                        ewid = input$ewid, 
                        ColSeq = input$colSeq,
                        ColRev = input$colRev,

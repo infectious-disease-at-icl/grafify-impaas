@@ -10,12 +10,17 @@ link_github <- tags$a(
 )
 link_vignettes <- tags$a(
   shiny::icon("box-arrow-up-right"), "grafify R package vignettes",
-  href = "https://grafify-vignettes.netlify.app",
+  href = "https://grafify.shenoylab.com",
   target = "_blank"
 )
 link_biostats <- tags$a(
   shiny::icon("box-arrow-up-right"), "Statistics for Micro/Immuno Biologists",
-  href = "https://microimmunostats.netlify.app",
+  href = "https://biostats.shenoylab.com",
   target = "_blank"
 )
 
+link_rcoding <- tags$a(
+  shiny::icon("box-arrow-up-right"), "R coding workshop",
+  href = "https://rcoding.shenoylab.com",
+  target = "_blank"
+)

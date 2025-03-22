@@ -1,9 +1,5 @@
-#This one works with various source files and generates just graphs
-#adding 4d plots #with bin sizes #fixed 4dPointSD #Allows Excel files #QQ & Density & multiFacets #Added images_n_help
-#Errorbar dropdown list #Images for Instructions
-#replated DT with gt package #APP without sidebar
 #parts of the UI spread across 8 src01Panel---.R files
-#Averages of Random Fac levels
+#
 library(grafify)
 library(bslib)   #for theme
 library(bsicons) #for icons
@@ -11,30 +7,24 @@ library(shinyBS) #for BS tooltip
 library(shiny)
 library(shinyWidgets) #for updated shiny
 library(colourpicker) #for single colour
-library(readxl)  #for file upload
-library(readr)   #for file upload
-library(ggplot2) #for facet_grid and others
+library(readxl)   #for file upload
+library(readr)    #for file upload
+library(ggplot2)  #for facet_grid and others
 library(lmerTest) #for lmerMod
-library(emmeans) #for posthoc comparisons
-library(rlang)   #for !! calls
-library(gt) #for colour tables
-#library(DT)      #for tables
+library(emmeans)  #for posthoc comparisons
+library(rlang)    #for !! calls
+library(gt)       #for colour tables
 library(shinyjqui) #for drag and drop
 library(dplyr)
-#for shinylive 
+
+#next few lines for shinylive only
 #library(showtext)
 #font_add("Arial", "www/fonts/arial.ttf")
 #font_add("Courier", "www/fonts/cour.ttf")
 #showtext_auto()
 
-########### shiny proxy needs port 3838 ############
-#options(shiny.host = "0.0.0.0") #from YouTube video
-#options(shiny.port = 5000) #from YouTube video
-shiny::addResourcePath('www', '/home/shinyx/shiny-apps/app/www') #from stack for images in docker
-#shiny::addResourcePath('www/favicon', '/srv/shiny-server/www/favicon') #from stack for images in docker
-shiny::addResourcePath('source', '/home/shinyx/shiny-apps/app/source') #for Feb25 onwards with source folder
-
-source("./source/src01c2long_GraphOpts_sidebar_ui.R", local = TRUE) #for fonts, colours, symbols, box/violin transparency, errorbars
+#source files for UI parts
+#source("./source/src01c2long_GraphOpts_sidebar_ui.R", local = TRUE) #for fonts, colours, symbols, box/violin transparency, errorbars
 #this versin of mainbar has no sidebar & has GraphOpts next to graph card
 source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
 source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
@@ -44,8 +34,8 @@ source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
 ui <- bslib::page_navbar(
   #ga G-059EWJ6910 for shiny.io
   #ga G-TMCF321TZZ for netlify.app
-  tags$head(includeHTML("./source/head_copilot.html")),
-  tags$body(includeHTML("./source/body_copilot.html")), 
+  tags$head(includeHTML("source/head_copilot.html")),
+  tags$body(includeHTML("source/body_copilot.html")), 
   #fluid = TRUE,
   theme = bs_theme(preset = "cosmo",
                    "navbar-bg" = "#aa4499",
@@ -134,9 +124,11 @@ ui <- bslib::page_navbar(
   nav_panel(title = "Instructions", 
             mainPanel(width = 9,
                       HTML(paste0(tags$div(tags$h6(
-                        "Note: Quick help also available by hovering over ", bs_icon("info-circle"),"icons.")))),
+                        "Note: Quick help also available by hovering over ", 
+                        bs_icon("info-circle"),"icons.")))),
                       tabsetPanel(
-                        tabPanel(tags$h5("Instructions: Data & Variables"),
+                        #from src02_headers_help.R & src_01g_Help_n_Images.R
+                        tabPanel(tags$h5("Instructions: Data & Variables"), 
                                  tags$br(),
                                  htmlOutput("Instr_Data")),
                         tabPanel(tags$h5("Instructions: Graphs"),
@@ -146,9 +138,7 @@ ui <- bslib::page_navbar(
                                  tags$br(),
                                  htmlOutput("Instr_ANOVA"))
                       ),
-                      #htmlOutput("pickvariables")
             )),
-  #help from src02* headerhelp file
   #links on menu bar sourced from src01e_menu_links
   nav_menu(
     title = "Links",
@@ -158,7 +148,8 @@ ui <- bslib::page_navbar(
     #grafify github
     nav_item(link_vignettes),
     #vignettes
-    nav_item(link_biostats)
+    nav_item(link_biostats),
+    nav_item(link_rcoding)
   ),
   #biostats book
   #favicon for browswers in www folder
@@ -167,7 +158,7 @@ ui <- bslib::page_navbar(
 
 # server logic
 server <- function(input, output, session) {
-  #bslib::bs_themer()
+  #bslib::bs_themer() #during development
   
   #Main uploaded file
   file1 <- reactive({
@@ -199,7 +190,7 @@ server <- function(input, output, session) {
     }
   })
   
-  #X-axis varsOne reactive
+  #X-axis varsOne reactive Box 1
   v1Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -219,12 +210,12 @@ server <- function(input, output, session) {
       multiple = FALSE
     )
   })
-  #varsOne UI output
+  #varsOne UI output X-axis Box 1
   output$varsel1 <- renderUI({
     v1Input()
   })
   
-  #Y-axis varsTwo reactive
+  #Y-axis varsTwo reactive Box 2
   v2Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -244,12 +235,12 @@ server <- function(input, output, session) {
       multiple = FALSE
     )
   })
-  #varsTwo UI output
+  #varsTwo UI output Y-axis Box 2
   output$varsel2 <- renderUI({
     v2Input()
   })
   
-  #Shapes varsThree reactive
+  #Shapes Box5 varsThree reactive
   v3Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -269,12 +260,12 @@ server <- function(input, output, session) {
       multiple = FALSE
     )
   })
-  #Shapes varsThree UI output
+  #Shapes varsThree UI output Box 5
   output$varsel3 <- renderUI({
     v3Input()
   })
   
-  #Grouping variable varsFour reactive
+  #Grouping variable varsFour reactive Box 3.1
   v4Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -294,11 +285,11 @@ server <- function(input, output, session) {
       multiple = FALSE
     )
   })
-  #Grouping varsFour UI output
+  #Grouping varsFour UI output Box 3.1
   output$varsel4 <- renderUI({
     v4Input()
   })
-  #Faceting variable varsFive reactive
+  #Faceting variable varsFive reactive Box 4.1
   v5Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -318,12 +309,12 @@ server <- function(input, output, session) {
       selected = ""
     )
   })
-  #faceting varsFive UI output
+  #faceting varsFive UI output Box 4.1
   output$varsel5 <- renderUI({
     v5Input()
   })
   
-  #Random variable varsSix reactive
+  #Random variable varsSix reactive Box 9.1
   v6Input <- eventReactive(input$startBtn, {
     req(file1())
     # Variable selection:
@@ -343,7 +334,7 @@ server <- function(input, output, session) {
       selected = ""
     )
   })
-  #Random varsSix UI output
+  #Random varsSix UI output Box 9.1
   output$varsel6 <- renderUI({
     if (input$MorS == "Mixed")
       v6Input()
@@ -369,7 +360,7 @@ server <- function(input, output, session) {
       uiOutput("varsel4")
   })
   
-  #reactive to get a conditional panel match for startbutton click
+  #reactive to get a conditional panel match for start button click
   startedq <- eventReactive(input$startBtn, {
     txt <- paste("Now pick variables.")
   })
@@ -566,11 +557,10 @@ server <- function(input, output, session) {
     flev
   })
   
-  
-  #drop levels for X axis & grouping variable, both together
+  #drop levels for X axis and get new table
   RelevelFile1 <- reactive({
     #force to factors and levels originally from data
-    #then from user input of groups as newlevels
+    #then from user input of groups as new levels
     #varsReLevel has names of groups from user
     #drop levels not used
     req(file1())
@@ -588,7 +578,7 @@ server <- function(input, output, session) {
              across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))
     })
   
-  ############## reactive for XYCatGp
+  #reactive for XYCatGp
   RelevelFile1.2 <- reactive({
     #force to factors and levels originally from data
     #then from user input of groups as newlevels

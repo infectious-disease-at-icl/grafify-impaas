@@ -28,24 +28,25 @@ output$pointAllsize <- renderUI({
           tags$strong("Adjust size of all symbols except the mean"),
           bs_icon("info-circle")
         ),
-        "Reduce to below 1 to make boxes or bars transparent. When set to 0, symbols will disappear."
+        "Increase or decrease size of data points."
       ),
-      value = 2.5, step = 0.1,
+      value = 2.5, step = 0.5,
       min = 0,
-      max = 1
+      max = 10
     )
 })
 #UI output for plot_point_sd shaapes
 output$pointAllshape <- renderUI({
-  if (input$graphType == "Point & Errorbar")
+  if (input$graphType == "Point & Errorbar" & 
+      input$ShapesOpt == "No")
     numericInput(
       "pointAllshape",
       label = tooltip(
         trigger = list(
-          tags$strong("Change shape of all symbols except the mean (0-25)"),
+          tags$strong("Change shape of all symbols except the mean (1-25)"),
           bs_icon("info-circle")
         ),
-        "Reduce to below 1 to make boxes or bars transparent. When set to 0, symbols will disappear."
+        "Change the shape of data points."
       ),
       value = 1, step = 1,
       min = 1,
@@ -62,7 +63,7 @@ output$ewid <- renderUI({
           tags$strong("Change the width of errorbar"),
           bs_icon("info-circle")
         ),
-        "Reduce to below 1 to make boxes or bars transparent. When set to 0, symbols will disappear."
+        "Change the width of the horizontal lines at ends of error bars."
       ),
       value = 0.1, step = 0.1,
       min = 0,
