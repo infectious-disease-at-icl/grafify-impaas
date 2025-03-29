@@ -172,3 +172,60 @@ output$facet_scaleOut <- renderUI({
       multiple = FALSE
       )
 })
+
+
+## Output for density counts
+output$dens_counts <- renderUI({
+  if (input$graphType %in% c("Density plot"))
+    selectizeInput(
+      "dens_count_type",
+      label = tooltip(
+        trigger = list(tags$strong("Plot type"), 
+                       bs_icon("info-circle")),
+        "Pick whether to plot smooth density, counts or normalised counts."
+      ),
+      choices = c("Density", "Counts", "Normalised counts"),
+      options = list(dropdownParent = 'body'),
+      selected =  "Counts", 
+      multiple = FALSE
+    )
+})
+
+## Output for histogram counts
+output$hist_counts <- renderUI({
+  if (input$graphType %in% c("Histogram plot"))
+    selectizeInput(
+      "hist_count_type",
+      label = tooltip(
+        trigger = list(tags$strong("Plot type"), 
+                       bs_icon("info-circle")),
+        "Pick whether to plot counts or normalised counts."
+      ),
+      choices = c("Counts", "Normalised counts"),
+      options = list(dropdownParent = 'body'),
+      selected =  "Counts", 
+      multiple = FALSE
+    )
+})
+
+
+## Output for box alpha, conditional
+output$out_box_alpha <- renderUI({
+  if (input$graphType %in% c("Boxplot",
+                             "Bar graph", 
+                             "Violin plot",
+                             "Before after plot"))
+    numericInput(
+      "box_alpha",
+      #box transparency option
+      label = tooltip(
+        trigger = list(tags$strong("Box or Bar opacity (0-1)"), bs_icon("info-circle")),
+        "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
+      ),
+      value = 1,
+      min = 0,
+      max = 1,
+      step = 0.1
+    )
+})
+

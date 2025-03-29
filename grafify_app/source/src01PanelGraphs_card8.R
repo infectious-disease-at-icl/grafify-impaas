@@ -156,6 +156,7 @@ Graphs_card8 <- list(fluidRow(column(
         value = 3
       ),
       #sym_jitter
+      conditionalPanel("input.graphType == 'Bar graph' || input.graphType == 'Boxplot' || input.graphType == 'Violin plot' || input.graphType == 'Before-after plot' || input.graphType == 'Point & Errorbar' ", 
       numericInput(
         "sym_jitter",
         #symbol scatter option
@@ -167,12 +168,12 @@ Graphs_card8 <- list(fluidRow(column(
         step = 0.1,
         min = 0,
         max = 1
-      ),
+      )),
       numericInput(
         "sym_alpha",
         #symbol transparency option
         label = tooltip(
-          trigger = list(tags$strong("Symbol opacity (0-1)"), bs_icon("info-circle")),
+          trigger = list(tags$strong("Symbol/Density/Histogram opacity (0-1)"), bs_icon("info-circle")),
           "Reduce the value below 1 to control transparency of symbols when data points overlap."
         ),
         value = .8,
@@ -180,44 +181,24 @@ Graphs_card8 <- list(fluidRow(column(
         min = 0,
         max = 1
       ),
-      numericInput(
-        "box_alpha",
-        #box transparency option
-        label = tooltip(
-          trigger = list(tags$strong("Box or Bar opacity (0-1)"), bs_icon("info-circle")),
-          "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
-        ),
-        value = 1,
-        min = 0,
-        max = 1
-      ),
+#      numericInput(
+#        "box_alpha",
+#        #box transparency option
+#        label = tooltip(
+#          trigger = list(tags$strong("Box or Bar opacity (0-1)"), 
+#                         bs_icon("info-circle")),
+#          "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
+#        ),
+#        value = 1,
+#        min = 0,
+#        max = 1
+#      ),
+      uiOutput("out_box_alpha"),
       uiOutput("vio_alpha"),
       uiOutput("pointAllalpha"),
       #all points transparency option
       uiOutput("pointAllsize"),
       uiOutput("pointAllshape"),
-#      conditionalPanel(
-#        "input.graphType == 'Bar graph' || input.graphType == 'Violin plot' || input.graphType == 'Boxplot'",
-#        accordion(
-#          open = TRUE,
-#          accordion_panel(
-#            "Transparency options",
-#            #box_alpha
-#            numericInput(
-#              "box_alpha",
-#              #box transparency option
-#              label = tooltip(
-#                trigger = list(tags$strong("Box or Bar opacity (0-1)"), bs_icon("info-circle")),
-#                "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
-#              ),
-#              value = 1,
-#              min = 0,
-#              max = 1
-#            ),
-#            uiOutput("vio_alpha")
-#          )
-#        )
-#      ),
     )
   )
 )))

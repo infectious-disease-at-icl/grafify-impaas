@@ -75,41 +75,13 @@ Graphs_card6_7 <- list(fluidRow(
            textOutput("newRelevelGp")#)
          )
     ),
-    ####### always on Relevel
-    #Option to reorder X-axis groups yes/no
-#    conditionalPanel(
-#      "output.XforRelevel == 'The X-axis variable is categorical. You can reorder groups.'",
-#      selectizeInput(
-#        "DoRelevel",
-#        #width = "150px",
-#        label = tooltip(
-#          trigger = list(
-#            tags$h3("7"),
-#            tags$strong("Reorder X-axis groups."),
-#            bs_icon("info-circle")
-#          ),
-#          "Click Yes if you would like to reorder the groups along the X-axis. NOTE: if you drop groups from graphs, they will not be used in the analyses."
-#        ),
-#        choices = c("Choose one" =
-#                      "", "Yes", "No"),
-#        options = list(dropdownParent = 'body'),
-#        selected = "No"
-#      )
-#    )
-#  ),
-#  #conditional panel if reordering chosen
-#  column(
-#    3,
-#    conditionalPanel(
-#      "input.DoRelevel == 'Yes'",
-#      htmlOutput("selVarsReLevel"),
-#      #reorder X-axis groups
-#      textOutput("newRelevel")
-#    )      #Text of new order of X-axis
-#  ),
   column(
     3,
-    conditionalPanel("input.graphType == 'Histogram plot'", uiOutput("Binsize")),
+    conditionalPanel("input.graphType == 'Density plot'", 
+                     uiOutput("dens_counts")),
+    conditionalPanel("input.graphType == 'Histogram plot'", 
+                     uiOutput("Binsize"),
+                     uiOutput("hist_counts")),
     conditionalPanel(
       "input.graphType == 'Bar graph' ||
                      input.graphType == 'Point & Errorbar'",

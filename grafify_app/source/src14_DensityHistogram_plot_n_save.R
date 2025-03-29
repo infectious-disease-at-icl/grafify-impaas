@@ -1,4 +1,4 @@
-source("./source/src14b_plot_density_histo.R", local = TRUE)
+source("./source/src14b2_plot_density_histo.R", local = TRUE)
 
 plotDensity_react <- reactive({
   df <- RelevelFile1.1() #if(input$DoRelevel == "Yes") df <- RelevelFile1()
@@ -8,6 +8,7 @@ plotDensity_react <- reactive({
                       TextXAngle = input$text_angle,
                       c_alpha = input$sym_alpha,
                       fontsize = input$font_size,
+                      PlotType = input$dens_count_type,
                       ColSeq = input$colSeq,
                       ColRev = input$colRev,
                       ColPal = input$colpal,
@@ -19,6 +20,7 @@ plotDensity_react <- reactive({
       plot_density_log(data = df,
                       TextXAngle = input$text_angle,
                       fontsize = input$font_size,
+                      PlotType = input$dens_count_type,
                       c_alpha = input$sym_alpha,
                       ColSeq = input$colSeq,
                       ColRev = input$colRev,
@@ -57,6 +59,7 @@ plotHistogram_react <- reactive({
       plot_histogram_log(data = df,
                          TextXAngle = input$text_angle,
                          BinSize = input$Binsize,
+                         PlotType = input$hist_count_type,
                          c_alpha = input$sym_alpha,
                          fontsize = input$font_size,
                          ColSeq = input$colSeq,
@@ -70,6 +73,7 @@ plotHistogram_react <- reactive({
       plot_histogram_log(data = df,
                          TextXAngle = input$text_angle,
                          BinSize = input$Binsize,
+                         PlotType = input$hist_count_type,
                          fontsize = input$font_size,
                          c_alpha = input$sym_alpha,
                          ColSeq = input$colSeq,

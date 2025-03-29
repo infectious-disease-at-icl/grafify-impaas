@@ -3,9 +3,9 @@ avgFile1 <- reactive({
   ######## -start file1() for XYNum & RelevelFile1() for everything else
   observe(input$MorS)
   if(Xnum() == TRUE & CatGp() == FALSE){df <- file1()}
+  if(Xnum() == TRUE & CatGp() == TRUE) {df <- RelevelFile1.2()}
   if(Xnum() == FALSE & CatGp() == TRUE) {df <- RelevelFile1()}
   if(Xnum() == FALSE & input$addVarsOpt == "No") {df <- RelevelFile1.1()}
-  if(Xnum() == TRUE & CatGp() == TRUE) {df <- RelevelFile1.2()}
   ####### -end file1() for XYNum & RelevelFile1() for everything else 
   #req(RelevelFile1())
   #df <- RelevelFile1() #do not depend on DoRelevel
@@ -28,7 +28,8 @@ avgFile1 <- reactive({
   
   #get table summaries  
   if(input$MorS == "Mixed" &
-     input$addVarsOpt == "Yes"){
+     input$addVarsOpt == "Yes" &
+     input$AvgRF == "Yes"){
     avgdf <- table_summary(df,
                            y,
                            c(x1, x2, r1))
@@ -37,9 +38,13 @@ avgFile1 <- reactive({
     n1 <- ltab-3
     n2 <- ltab-2
     avgdf <- avgdf[, c(1:n1, n2:ltab)]
-    }
+  }
   if(input$MorS == "Mixed" &
-     input$addVarsOpt == "No"){
+     input$addVarsOpt == "Yes" &
+     input$AvgRF == "No") {avgdf <- df}
+  if(input$MorS == "Mixed" &
+     input$addVarsOpt == "No" &
+     input$AvgRF == "Yes"){
     avgdf <- table_summary(df,
                            y,
                            c(x1, r1))
@@ -48,7 +53,11 @@ avgFile1 <- reactive({
     n1 <- ltab-3
     n2 <- ltab-2
     avgdf <- avgdf[, c(1:n1, n2:ltab)]
-    }
+  }
+  if(input$MorS == "Mixed" &
+     input$addVarsOpt == "No" &
+     input$AvgRF == "No") {avgdf <- df}
+  
   if(input$MorS == "Simple" &
      input$addVarsOpt == "No"){
     avgdf <- df[, c(x1, y)]}
@@ -58,38 +67,48 @@ avgFile1 <- reactive({
   
   
   ############# - for shapes for RF plot on ANOVA tab
-  if(input$MorS == "Mixed" &
-     input$addVarsOpt == "Yes" &
-     input$ShapesOpt == "Yes"){
-    avgdf <- table_summary(df,
-                           y,
-                           c(x1, x2, r1, sh1))
-    colnames(avgdf)[5] <- y
-    ltab <- length(colnames(avgdf))
-    n1 <- ltab-3
-    n2 <- ltab-2
-    avgdf <- avgdf[, c(1:n1, n2:ltab)]
-  }
-  if(input$MorS == "Mixed" &
-     input$addVarsOpt == "No"&
-     input$ShapesOpt == "Yes"){
-    avgdf <- table_summary(df,
-                           y,
-                           c(x1, r1, sh1))
-    colnames(avgdf)[4] <- y
-    ltab <- length(colnames(avgdf))
-    n1 <- ltab-3
-    n2 <- ltab-2
-    avgdf <- avgdf[, c(1:n1, n2:ltab)]
-  }
-  if(input$MorS == "Simple" &
-     input$addVarsOpt == "No"&
-     input$ShapesOpt == "Yes"){
-    avgdf <- df[, c(x1, sh1, y)]}
-  if(input$MorS == "Simple" &
-     input$addVarsOpt == "Yes"&
-     input$ShapesOpt == "Yes"){
-    avgdf <- df[, c(x1, x2, sh1, y)]}
+#  if(input$MorS == "Mixed" &
+#     input$addVarsOpt == "Yes" &
+#     input$ShapesOpt == "Yes" & 
+#     input$AvgRF == "Yes"){
+#    avgdf <- table_summary(df,
+#                           y,
+#                           c(x1, x2, sh1, r1))
+#    colnames(avgdf)[5] <- y
+#    ltab <- length(colnames(avgdf))
+#    n1 <- ltab-3
+#    n2 <- ltab-2
+#    avgdf <- avgdf[, c(1:n1, n2:ltab)]
+#  }
+#  if(input$MorS == "Mixed" &
+#     input$addVarsOpt == "Yes" &
+#     input$ShapesOpt == "Yes" & 
+#     input$AvgRF == "No"){avgdf <- df[, c(x1, x2, r1, sh1, y)]}
+#  if(input$MorS == "Mixed" &
+#     input$addVarsOpt == "No"&
+#     input$ShapesOpt == "Yes" &
+#     input$AvgRF == "Yes"){
+#    avgdf <- table_summary(df,
+#                           y,
+#                           c(x1, sh1, r1))
+#    colnames(avgdf)[4] <- y
+#    ltab <- length(colnames(avgdf))
+#    n1 <- ltab-3
+#    n2 <- ltab-2
+#    avgdf <- avgdf[, c(1:n1, n2:ltab)]
+#  }
+#  if(input$MorS == "Mixed" &
+#     input$addVarsOpt == "No"&
+#     input$ShapesOpt == "Yes" &
+#     input$AvgRF == "No") {avgdf <- df[, c(x1, r1, sh1, y)]}
+#  if(input$MorS == "Simple" &
+#     input$addVarsOpt == "No"&
+#     input$ShapesOpt == "Yes"){
+#    avgdf <- df[, c(x1, sh1, y)]}
+#  if(input$MorS == "Simple" &
+#     input$addVarsOpt == "Yes"&
+#     input$ShapesOpt == "Yes"){
+#    avgdf <- df[, c(x1, x2, sh1, y)]}
   
   ############ 
   avgdf
@@ -97,8 +116,8 @@ avgFile1 <- reactive({
 
 output$avgFile_out <- render_gt({
   req(c(file1(), avgFile1()))
-  ifelse(input$AvgRF == "Yes",
-  avgdf <- avgFile1(), avgdf <- file1())
+  #ifelse(input$AvgRF == "Yes",
+  avgdf <- avgFile1() #, avgdf <- file1())
   gt(avgdf) %>% 
     opt_interactive() %>% 
     tab_options(
@@ -133,8 +152,8 @@ output$newmodOut <- renderPrint({ simMod() })
 mixMod <- reactive({
   
   ########## Yes/No to AvgRF
-  ifelse(input$AvgRF == "Yes",
-         df <- avgFile1(), df <- file1())
+  #ifelse(input$AvgRF == "Yes",
+         df <- avgFile1()#, df <- file1())
   #pass avgtable to reactive
   #df <- avgFile1()
   ns <- colnames(df)
@@ -265,42 +284,17 @@ output$RandFplot <- renderPlot({
 })
 
 
+source("./source/src15_AvgRF_graphs.R", #sources the AvgRF plot functions
+       local = TRUE,
+       echo = TRUE)
+
 avg_RandFplotreact <- eventReactive(input$analyseData, {
-  pf <- whichplotChosenGraph()
-  #or the single colour graph, if chosen
-  if(input$addVarsOpt == "Yes" &  
-     Xnum() == FALSE & 
-     CatGp() == TRUE){singColnum <- CatGplevels()}
-  if(input$addVarsOpt == "No" & 
-     Xnum() == FALSE) {singColnum <- Xlevels()}
-  ifelse (input$colPick == "No" ,
-          pf <- pf,
-          pf <- pf +
-            scale_fill_manual(values = rep(input$colPick2, 
-                                           times = singColnum)))
-  
-  ############# Yes/No to AvgRF
-  #ifelse(input$AvgRF == "Yes",
-  #       df <- avgFile1(), df <- file1())
-  #############
-  df <- avgFile1()
-  pf$data <- df
-  #avgpf <- pf %+% df
-  #if(input$AvgRF == "Yes" & 
-  #   input$MorS == "Mixed"){
-    avgpf <- pf + 
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo),
-           subtitle = expr("(Means of replicates within levels of random factor:"~!!input$varsSix~"plotted)"))
-    #}
-  
-  ############# Yes/No to AvgRF
-  #if(input$AvgRF == "No" & 
-  #         input$MorS == "Mixed"){
-  #       avgpf <- pf + aes(shape = factor(!!input$varsSix))+ 
-  #         guides(shape = guide_legend(title = input$varsSix))
-  #         labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo),
-  #              subtitle = expr("(Shapes mapped to "~!!input$varsSix~")"))}
-  #############
+  if(input$AvgRF == "Yes")
+  avgpf <- AvgRFPlotSingCol()
+  avgpf$data <- avgFile1()
+  avgpf <- avgpf  + 
+    labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo),
+         subtitle = expr("(Means of replicates within levels of random factor:"~!!input$varsSix~"plotted)"))
   avgpf
 })
 
