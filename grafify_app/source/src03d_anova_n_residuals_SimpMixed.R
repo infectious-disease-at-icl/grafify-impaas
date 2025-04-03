@@ -289,7 +289,7 @@ source("./source/src15_AvgRF_graphs.R", #sources the AvgRF plot functions
        echo = TRUE)
 
 avg_RandFplotreact <- eventReactive(input$analyseData, {
-  if(input$AvgRF == "Yes")
+  req(avgFile1())
   avgpf <- AvgRFPlotSingCol()
   avgpf$data <- avgFile1()
   avgpf <- avgpf  + 
@@ -301,3 +301,4 @@ avg_RandFplotreact <- eventReactive(input$analyseData, {
 output$avgRandFplot <- renderPlot({
   avg_RandFplotreact()
 })
+
