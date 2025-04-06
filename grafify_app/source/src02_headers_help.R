@@ -126,14 +126,15 @@ output$ANOVAsHelpOpen <- renderText({ #in use on ANOVA landing
         tags$strong("Boxes 1-3"),
         " remember to press ",
         tags$strong("'Variables chosen'"),
-        "on Graphs tab and then click 'Analyase my data' to update ANOVAs results."
+        "on Graphs tab and then click ",
+        tags$strong("'Analyse my data'"), "to update ANOVAs results."
       ),
       tags$li(
         tags$strong("Box 10"),
         "for choosing the type of post-hoc comparisons."
       ),
       tags$li(
-        "Check the model summary on the Linear Model tab, which should show the 'formula' with the correct variables and log-transformations, if used."
+        "The Linear Model tab below shows the model summary, including the 'formula', which shows fixed and random variables, log-transformation etc, if used."
       )
     )
   )))

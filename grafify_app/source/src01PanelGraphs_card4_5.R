@@ -14,6 +14,7 @@ Graphs_card4_5 <- list(fluidRow(
         "A categorical variable to facet plots by, or choose No before proceeding."
       ),
       choices = c("Choose Yes/No" = "", c("Yes", "No")),
+      selected = "No",
       options = list(dropdownParent = 'body')
     )
   ),
@@ -36,6 +37,7 @@ Graphs_card4_5 <- list(fluidRow(
         "A categorical variable to map to shape of symbols or a matching variable for Before-after plots, or choose No before proceeding."
       ),
       choices = c("Choose Yes/No" = "", c("Yes", "No")),
+      selected = "No",
       options = list(dropdownParent = 'body')
     )
   ),

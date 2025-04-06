@@ -38,6 +38,7 @@ card(card_header(tags$h5("Data & variables")), value = 1, #tab panel for data & 
                  ),
                choices = c("Choose Yes/No" =
                              "", "Yes", "No"),
+               selected = "No",
                options = list(dropdownParent = 'body')
              )
            )
