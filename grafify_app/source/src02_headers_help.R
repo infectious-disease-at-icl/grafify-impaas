@@ -28,7 +28,7 @@ output$dataHelpOpen <- renderText({ #in use on landing page
       ),
       tags$li(
         tags$strong("Box 3"),
-        "is for an optional Grouping variable (e.g., 2way-ANOVAs), but it is required if the X-axis variable is also numeric."
+        "is for an optional (categorical) Grouping variable (e.g., 2way-ANOVAs), but it is required if the X-axis variable is also numeric (in which case it can be a categorical or numeric variable)."
       ),
       tags$li(
         "All variables selected on this page will be used on Graphs and in the ANOVA analyses."
@@ -317,11 +317,11 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
         "If you upload an Excel file, a dropdown list of sheets within the file will appear. Pick a sheet and press 'Start'."
       ),
       tags$li(
-        "Pick variables accordingly to plot on X-axis ", tags$strong("Box 1"), ", Y-axis ", tags$strong("Box 2"), " and a grouping variable, if required in ", tags$strong("Boxes 3 and 3.1")
+        "Pick variables (names of columns from your data table) to plot on X-axis in ", tags$strong("Box 1"), ", Y-axis in ", tags$strong("Box 2"), " and a grouping variable, if required in ", tags$strong("Boxes 3 and 3.1")
       ),
       tags$br(),
       tags$ul(
-        tags$li("See image below showing", tags$strong("Boxes 1 - 3"), "."),
+        tags$li("See image below with example dataset in", tags$strong("Boxes 1 - 3"), "."),
         tags$br(),
         layout_columns(col_widths = 12, card("", tagList(
           #h4("Types of graphs with grafify"),
@@ -339,17 +339,17 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
       tags$h5("Requirement for plotting data:"),
       tags$ol(
         tags$li(
-          "At least 2 variables must be chosen: one each for the X and Y axes of Graphs, i.e., Boxes 1 and 2."
+          "At least 2 variables must be chosen: one each for the X- and Y-axis of Graphs, i.e., Boxes 1 and 2."
         ),
         tags$li(
-          "A third Grouping variable (e.g., for 2-way ANOVA designs) is optional when the X-axis variable is categorical. To be able to choose this, first say 'Yes' in Box 3."
+          "A third Grouping variable (e.g., for 2-way ANOVA designs) is optional when the X-axis variable is categorical. To be able to choose this, say 'Yes' in Box 3 and then choose a variable in Box 3.1. With categorical X-axis variables, the Grouping variable has to be a categorical variable."
         ),
         tags$li(
-          "If the X and Y axis variables can both also be numeric. In this case, the Grouping variable is mandatory, and this variable can be categorical or numeric. Say 'Yes' in Box 3 and then choose the variable in Box 3.1."
+          "If the X- and Y- axis variables are both numeric (e.g., X-axis is Time or concentration), the Grouping variable is mandatory. In this case the grouping varaible can be either categorical or numeric."
         ),
         tags$li(
           tags$strong(
-            "Note: all variables chosen in Boxes 1-3, and log-transformation used from Box 8, will be used in data analyses. If any levels within categorical variables are dropped from graphs in Boxes 7.1 and 7.2, they will not be used in analyses."
+            "Note: all variables chosen in Boxes 1-3, and log-transformation used from Box 8 (if selected), will be used in data analyses. If any levels within categorical variables are dropped from graphs in Boxes 7.1 and 7.2 (see Instructions: Graphs), they will not be used in analyses."
           )
         )
       )
@@ -364,19 +364,10 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
         ),
         tags$li(
           tags$strong("Box 5"),
-          " lets you pick a Shapes or Matching variable (only 1) from dropdown list, or choose 'No'."
+          " lets you pick a Shapes or Matching variable (only 1) from a dropdown list, or choose 'No'."
         ),
         tags$li("Then press ", tags$strong("'Variables chosen'"), "."),
-        tags$li(tags$strong("Note:"), "variables chosen in Boxes 4-5 are not used in the analyses - these are only for plotting data."),
-        tags$li(
-          tags$strong("Box 6"),
-          "lists the types of Graphs based on variables you have chosen. Make a selection and press ",
-          tags$strong("'grafify my data'"),
-          "to see the Graph."
-        ),
-        tags$li(
-          "The types of Graphs available will depend on type of data (see Instructions:Graphs)."
-        )
+        tags$li(tags$strong("Note: variables chosen in Boxes 4-5 are not used in the analyses - these only change the appearance of the graph."))
         )),
     tags$br(),
     layout_columns(col_widths = 12, card("", tagList(
@@ -389,7 +380,21 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
       tags$h6(
         "Optional variables for graphs can be chosen in", tags$strong("Boxes 4-5"), "."
       )))),
-    
+   tags$div(
+     tags$h5("Plotting a graph"),
+     tags$ol(
+       tags$li(
+         "Once selections are made in Boxes 1-5, the types of Graphs that can be plotted based on variables chosen will appear in", tags$strong("Box 6")), 
+       tags$li("Make a selection and press ",
+         tags$strong("'grafify my data'"),
+         "to see the Graph."
+       ),
+       tags$li(
+         "The appearance of graphs can be changed using various options, and the graph downloaded (see Instructions:Graphs)."
+       ),
+       tags$br()
+     )
+   ) 
   )))
 })
 
@@ -434,9 +439,12 @@ output$Instr_Graphs <- renderText({ #in use
         tags$li(
           "The graph is available to ", tags$strong("download as a PDF file"),". You will need to change the height and width to fit the graph within the PDF document."
         ),
+        tags$li(tags$strong("Tips on PDF sizing for graph downloads:")),
         tags$ul(
-          tags$li(tags$strong("Tip on PDF sizing:"),
-            "Typically, at fontsize of 18 pts (default) with a angled text on X-axis, start with a height of 12 cm and increase width based on number of groups (e.g., 20cm for ~10 groups plus legend). Avoid reducing the fontsize on the graph, instead increase the dimensions of the PDF.Even if the graph looks 'squished' on the screen, it will look good when the dimension of the PDF file are large enough to accommodate it.  Increase the height if you also used a faceting variable, angled labels on the X-axis or have long list of legends. You do not need to press 'grafify my data' when you change dimensions, click 'Save as PDF' directly."
+          tags$li(
+            "Typically, at fontsize of 18 pts (default) with a angled text on X-axis, start with a height of 12 cm and increase width based on number of groups (e.g., 20 cm for ~10 groups plus legend on the right). Even if the graph looks 'squished' on the screen or missing parts, it will look good and contain all components when the dimension of the PDF file are large enough to accommodate it. Therefore, avoid reducing the font or symbol sizes and instead increase the dimensions of the PDF."),
+            tags$li("Increase the height if you also used a faceting variable, angled labels on the X-axis or have long list of legends. Add ~8 cm for each additional panel to the H and W."),
+            tags$li(tags$strong("You do not need to press 'grafify my data' when you change dimensions, click 'Save as PDF' directly.")
           ),
           tags$li(
             "Changing height or width does not change appearance of the graph online."
@@ -455,13 +463,13 @@ output$Instr_Graphs <- renderText({ #in use
         tags$li(
           tags$strong("Box & whiskers: "),
           tags$em(
-            "All data points are shown as scattered circles with boxes depicting the interquartile range (IQR; 25th - 75th percentiles), and whiskers depicting 1.6xIQR, and a line representing the median (50th percentile). The colours of boxes and circles will match, and can be changed. If a Shapes variable is slected, the shape of data points will change (shown in black). Up to 25 different shapes are allowed."
+            "All data points are shown as scattered circles with boxes depicting the interquartile range (IQR; 25th - 75th percentiles), and whiskers depicting 1.6xIQR, and a line representing the median (50th percentile). The colours of boxes and circles will match, and the colour pallete can be changed in Box 8. If a Shapes variable is slected, the shape of data points will change (shown in black). Up to 25 different shapes are allowed."
           )
         ),
         tags$li(
           tags$strong("Violin plus box & whiskers: "),
           tags$em(
-            "Everything as with box & whiskers, plus violins which show overall distribution of data. By default, the colours of symbols and vioins will match and boxes will look white (box opacity = 0), which can be changed."
+            "As box & whiskers, plus violins which show overall distribution of data. By default, the colours of symbols and vioins will match and boxes will look white, which can be changed with the Box opacity option in Box 8."
           )
         ),
         tags$li(
@@ -479,7 +487,7 @@ output$Instr_Graphs <- renderText({ #in use
         tags$li(
           tags$strong("Density or Histogram plot : "),
           tags$em(
-            "A smooth density plot of data (Y-axis variable) grouped by the X-axis (categorical variable only) or histogram plot. If Histogram plot is chosen, the binsize can be changed."
+            "A smooth plot of density function or histogram of counts or normalised counts (Y-axis variable) grouped by the X-axis (categorical variable only). If Histogram plot is chosen, the binsize can be changed."
           )
         ),
         tags$li(
@@ -592,7 +600,7 @@ output$Instr_ANOVA <- renderText({ #in use
         tags$img(
           src = "boxes9.png",
           align = "left",
-          width = "70%"
+          width = "80%"
         ))))
 )),
       
@@ -612,18 +620,18 @@ output$Instr_ANOVA <- renderText({ #in use
               tags$ul(tags$li("Technical replicates are indicated in the variable ", tags$strong("Tech_Rep_num"), ", e.g., Expt1 has data for 'Cell_viability_percent' from TechRep1 and TechRep2."), 
                       tags$li(tags$strong("These kinds of technical replicates are not statistically independent,  and using them in the data table could lead to pseudoreplication.")))
             )),
-            tags$li("To avoid pseudoreplication, `grafify` will ", tags$strong("average replicates within levels of the Random factor chosen in Box 9.1 grouped by Fixed factors selected in Boxes 1-3 before fitting a random intercepts mixed effects model.")), 
-            tags$li("The averaging of technical replicates ensures that pseudoreplication, which poses a higher risk is avoided, even though the information on variability of technical replicates within experiments may be lost. Within experiment variability, i.e., varibility in technical replicates, should not affect the overall outcome of the test."),
+            tags$li("To avoid pseudoreplication, the `grafify` default is to ", tags$strong("average replicates within levels of the Random factor chosen in Box 9.1 grouped by Fixed factors selected in Boxes 1-3 before fitting a random intercepts mixed effects model.")), 
+            tags$li("The averaging of technical replicates ensures that pseudoreplication, which poses an analysis risk is avoided. Within experiment variability, i.e., varibility in technical replicates, should not affect the overall outcome of the test. Overall, therefore, the quality of technical replicates matters more than their quantity."),
             tags$li("If you do have technical replicates in your data table as above, the ", tags$strong("Random factor chosen in Box 9.1"), "should be ", tags$strong("Experiment_num"), ". Choosing 'Technical_rep_num' as Random variable will  give the wrong result."),
             tags$li("Ideally, you should average technical replicates and only use means from independent experiments in the data set uploaded to `grafify`."),
-            tags$li("Alternatively, more advanced mixed effects models can be used in R, which are not available in `grafify` online."),
+            tags$li("Alternatively, more advanced mixed effects models can be used in R (these are not currently available in `grafify` online)."),
         tags$li(tags$strong("Using linear mixed effects analysis  does not automatically fix issues such as pseudoreplication.")),
         tags$ul(tags$li("It is up to the user to ensure that statistically independent values are entered in the data table"),
         tags$li("Another important aspect of the data table is ensuring the hierarchy is correctly entered, e.g., Genotype and Treatments are tested within each Experimental block in the above example."))
         )),
       
       tags$div(
-        tags$h5("Varibles on graphs vs analyses:"),
+        tags$h5("Varibles on graphs versus those used for analyses:"),
       tags$ol(
       tags$li(
         "Only the variables selected on the 'Data & Variables' tab are used in ANOVA analyses, i.e, ", tags$strong("only variables in Box 1-3 are used in the linear model analyses."), "Variables chosen for Faceting or Shapes, i.e., Boxes 4-5 are ignored."), 

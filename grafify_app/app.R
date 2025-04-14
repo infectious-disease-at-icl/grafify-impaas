@@ -77,7 +77,16 @@ ui <- bslib::page_navbar(
           tags$h6(
             "The main advantages of grafify are the use of ggplot2 and various colourblind-friendly palettes, and easy access to linear models and linear mixed effects analyses for ANOVAs. These are more powerful and appropriate when experiments are designed as randomised blocks or have repeated measures."
           )
-        ))
+        ),
+        ############ for impaas
+        tags$li(
+          tags$h6(
+            "grafify online on this website is made possible through Impaas (Imperial Platform as a Service), courtesy of",
+            tags$a(href = "https://edtech.pages.doc.ic.ac.uk/", " Robert Chatley and Jason Bailey, Department of Computing, Imperial College London.")
+          )
+        )
+        )
+        ########## for impaas
       ))), column(
         3,
         card(
@@ -548,7 +557,7 @@ server <- function(input, output, session) {
   })
   RelevelNamesGp <- reactive({
     #force to factors and levels originally from data
-    #get levels within categorical X-axis
+    #get levels within Grouping variable
     req(file1())
     f <- file1()
     ############ always on relevel
@@ -567,8 +576,9 @@ server <- function(input, output, session) {
     ######### relevel with dplyr
     req(input$varsReLevel, input$varsReLevelGp)
     observe(input$addVarsOpt)
-    if(is.numeric(file1()[[input$varsOne]]) || 
-       is.numeric(file1()[[input$varsFour]]) ) {
+    if(is.numeric(file1()[[input$varsOne]]) #|| 
+       #is.numeric(file1()[[input$varsFour]]) 
+       ) {
       return(file1())
     }
     file1() %>% 

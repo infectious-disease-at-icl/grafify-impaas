@@ -33,7 +33,7 @@ card(card_header(tags$h5("Data & variables")), value = 1, #tab panel for data & 
                        tags$strong("Add a Grouping variable (Yes/No)?"),
                        bs_icon("info-circle")
                      ),
-                     "An optional grouping variable for 2way ANOVA designs. A Grouping variable (either categoric or numeric) is required when both X and Y variables are numeric."
+                     "An optional (categorical) grouping variable for 2way ANOVA designs. A Grouping variable (either categorical or numeric) is required when both X and Y variables are numeric."
                    )
                  ),
                choices = c("Choose Yes/No" =
