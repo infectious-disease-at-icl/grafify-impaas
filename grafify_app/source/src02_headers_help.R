@@ -1,43 +1,46 @@
 output$dataHelpOpen <- renderText({ #in use on landing page
   HTML(paste0(tags$div(
     tags$h4("Quick Instructions", (
-      tags$h6("(If using `grafify` for the first time, please read detailed instructions through the link on navigation bar.)")
+      tags$h6("(If using `grafify` for the first time, please read detailed ", tags$strong("Instructions"), " through the link on navigation bar before starting. These quick-steps are for users who are somewhat familiar with the app.)")
     )),
     tags$ol(
       tags$li(
-        "Upload a 'long' format table saved as a csv or Excel file, and click 'Start'. Or click 'Start' without file upload to use example data. If you are not familiar with a long-format table, see ",
+        "Use the 'Start here' panel on the top right corner to upload a long format table saved as a csv or Excel file, and click", tags$strong ("'Start'"),". To use example data for a trial run, just click 'Start'. If you are not familiar with a long format table, see ",
         tags$strong("Instructions"),
         "."
       ),
       tags$li(
-        "Then select options in dropdown",
-        tags$strong(" Boxes 1-10"),
-        "for Graphs and Analyses."),
-        tags$li("Remember to choose Yes/No in", 
-                tags$strong("Boxes 3, 4 and 5"), 
-                "before proceeding, otherwise there will be an error."),
-        tags$li("Remember to click appropriate action buttons to see graphs and analyses results. These are: ",
-        tags$strong(
-          "'Variables chosen', 'grafify my data', 'Analyse my data'"
+          "If the table is in the correct format (and column names do not have special characters/spaces), the app will show a preview of the data table, and a list of variables (column names) from your table will appear in dropdown menus in",
+          tags$strong("Boxes 1-3"),
+          " on bottom left of the 'Data & Variables' pane. If you are using an Excel file, you can select a sheet from your file before pressing 'Start'."
+          ),
+      tags$li(
+        "Then select options in dropdown menus in ",
+        tags$strong(" Boxes 1-3.")
         ),
-        "."
+      tags$li(
+        tags$strong("Box 1:"), 
+        "Pick a variable to plot on the X-axis of the graph. Typically, this is a categorical variable (e.g., Genotype, Treatment, etc.). This variable is also called the 'independent' variable. You can also plot a numeric variable (e.g., time, concentration).",
       ),
       tags$li(
-        tags$strong("Boxes 1 and 2"),
-        " are for choosing X- and Y-axis variables."
+        tags$strong("Box 2:"), 
+        "Pick a numeric (quantitative) variable from your data table to plot on the Y-axis of the graph. This is also called the 'dependent' or 'response' variable.",
       ),
       tags$li(
-        tags$strong("Box 3"),
-        "is for an optional (categorical) Grouping variable (e.g., 2way-ANOVAs), but it is required if the X-axis variable is also numeric (in which case it can be a categorical or numeric variable)."
+        tags$strong("Boxes 3 and 3.1:"), 
+        "These allow you to add an optional Grouping variable if (e.g., for two-way ANOVA). Choose 'Yes' in Box 3 and then select a variable in Box 3.1. ", 
+        tags$strong("Note:"), " if you chose a numeric variable in Box 1, you must also choose a Grouping variable in Box 3.1.",
       ),
       tags$li(
-        "All variables selected on this page will be used on Graphs and in the ANOVA analyses."
+        "All variables selected on this page will be used on Graphs and in the ANOVA analyses.",
       ),
       tags$li(
-        "After selecting variables go to the Graphs tab and choose options in ",
+        "After selecting variables go to the 'Graphs' tab and choose options in ",
         tags$strong("Boxes 4-8"),
         "."
-      )
+      ),
+      tags$li(
+        "If using example data with a categorical X-axis, try the following: Box 1: manufacturer, Box 2: displ; Box 3: Yes, Box 3.1: drv. Or for a numeric XY plot try: Box 1: cty, Box 2: hwy, Box 3: Yes and Box 3.1: either manufacturer or displ.")
     )
   )))
 })
@@ -45,54 +48,54 @@ output$dataHelpOpen <- renderText({ #in use on landing page
 output$graphsHelpOpen <- renderText({ #in use on Graphs landing 
   HTML(paste0(tags$div(
     tags$ol(
+      tags$li("Here you can choose optional variables for graphs (Boxes 4-5) and change graph type and appearance (Boxes 6-8). You should have chosen variables in Boxes 1-3 to proceed."),
       tags$li(
-        tags$strong("Box 4"),
-        " is for choosing Faceting variables (any number), or choose 'No' before proceeding."
+        tags$strong("Boxes 4 and 4.1:"), 
+        "Choose optional variables for faceting graphs. Choose 'Yes' in Box 4 and then select one or more variables from the dropdown list in Box 4.1. The variables chosen in Box 4.1 can also be reordered.", 
+        tags$strong("Note:"), "this choice only affects the appearance of the graph and is not included in linear model analysis.",
       ),
-      tags$li(
-        tags$strong("Box 5"),
-        " lets you pick a Shapes or Matching variable (only 1) from dropdown list, or choose 'No'."
+     tags$li(
+        tags$strong("Boxes 5 and 5.1:"),
+        "Pick a Shapes or Matching variable (only 1) from the dropdown list in Box 5.1, or choose 'No' in Box 5 before proceeding. A matching factor is essential for 'Before-after' plots (this variable can have any number of groups). The Shapes variable can also be used to change the shape of data points  in graphs other than 'Before-after plots'. In this case, there should be fewer than 25 groups within this variable (because only 25 different symbol shapes are available).",
       ),
-      tags$li("Then press ", tags$strong("'Variables chosen'"), "."),
+      tags$li("Then press ", tags$strong("'Variables chosen'"), " to see graph types available in Box 6."),
       tags$li(
-        tags$strong("Box 6"),
-        "lists the types of Graphs based on variables you have chosen. Make a selection and press ",
+        tags$strong("Box 6:"),
+        "This provides a list of Graphs types, which will depend on the type (categorical or numeric) and number of variables (one-way or two-way ANOVAs). Make a selection and press ",
         tags$strong("'grafify my data'"),
-        "to see the Graph."
+        "to see the Graph. The default is a Boxplot or Numeric XY1.",
       ),
       tags$li(
-        tags$strong("Boxes 7.1 and 7.2"),
-        "appears with options to reorder groups when the X-axis or Grouping variables are categorical."
+        tags$strong("Boxes 7.1 and 7.2:"),
+        "Reorder groups along the X-axis and/or the grouping factor in these boxes. Some groups may also be dropped completely from the graph.", tags$strong("Note:"), "dropping groups also removes them from the linear model analyses."
       ),
       tags$li(
-        tags$strong("Box 7.1"),
-        "also appears when both X and Y are numeric variables, and offers a choice to show data grouped into box and whiskers plot with a connecting line."
+        tags$strong("Box 7.1:"),
+        "A different kind Box 7.1 appears when both X and Y are numeric variables: a Yes/No choice of whether to show a connecting line through numeric X-Y plot."
       ),
+     tags$li(
+       "Press ",
+       tags$strong("'grafify my data'"),
+       "to see the (default) graph. If you then go back and pick a different graph type in Box 6, press 'grafify my data' to see the new graph."
+     ),
       tags$li(
-        tags$strong("Box 8"),
-        "presents several optional settings that change the appearance of Graphs (e.g., colours, fonts etc). Click ",
+        tags$strong("Box 8:"),
+        "These optional settings change the appearance of the graph (e.g., colours, fonts, error bar type, transparency of symbols and colours, log-transformation etc). Please see Instructions for further details. If you change any setting, remember to press ",
         tags$strong("'grafify my data'"),
-        "after changing any setting and see updated graphs. Download your graph as high-resolution PDFs by clicking ",
+        " to update graph."
+      ),
+     tags$li("Download your graph as a high-resolution PDF by clicking ",
         tags$strong("'Save as PDF'"),
-        "."
-      ),
-      tags$li(
-        "Graphs and ANOVAs will not update automatically if you change variables. Please remember to press ",
+        " See Instructions for detailed information on sizing the page of the PDF fie to fit the entire graph on it. Briefly, the appearance of graphs online is limited by the size of your screen, but a large enough PDF page dimension can fit graphs of any size even if they appear 'squished' on the screen."),
+     tags$li(tags$strong("Note:"),
+             " If you use log-transformation in Box 8, the graph will be shown on a log scale, and log-transformed data will be used in the linear model analyses."),
+     tags$li(
+        "Graphs and ANOVAs will not update automatically if you change variables (i.e., choices in Boxes 1-5). Please remember to press ",
         tags$strong("'Variables chosen'"),
-        "after changing variables in ",
-        tags$strong("(Boxes 1-5)"),
-        " for updated Graph options and ANOVA results."
+        " to update Graph and ANOVA variables."
       ),
-      tags$li(
-        "Similarly, remember to press ",
-        tags$strong("'grafify my data'"),
-        "after changing options in  ",
-        tags$strong("Box 8"),
-        "."
-      ),
-      tags$li("Order of groups can be changed or some groups dropped from the graph and analyses."),
-      tags$li(
-        "For linear model fitting, go to the ANOVAs and Comparisons tab and choose options in ",
+     tags$li(
+        "For linear model fitting, go to the 'ANOVAs (linear models) and Comparisons' tab and choose options in ",
         tags$strong("Boxes 9-10"),
         "."
       )
@@ -103,40 +106,44 @@ output$ANOVAsHelpOpen <- renderText({ #in use on ANOVA landing
   HTML(paste0(tags$div(
     tags$ol(
       tags$li(
-        "ANOVA and post-hoc comparisons can be performed only after picking optional variables on Graphs tab and clicking ",
+        "ANOVA and post-hoc comparisons can be performed only after picking optional variables on 'Graphs' tab and clicking ",
         tags$strong("'Variables chosen'"),
-        "."
+        ". This step is also required even if you are not interested in plotting your data and only want to perform linear model analyses."
       ),
       tags$li(
-        tags$strong("Box 9"),
-        "allows you to choose the type of analysis (Simple/Mixed effects). Results will appear after making a selection and clicking ",
+        tags$strong("Box 9:"),
+        "Choose the type of analysis (Simple or Mixed effects). Results will appear after making a selection and clicking ",
         tags$strong("'Analyse my data'"),
         "."
       ),
-      tags$li(
-        "Graphs of model residuals will be shown as a QQ plot and a Density plot."
-      ),
-      tags$li(
-        "If you choose 'Mixed', you need to also choose a random factor, e.g., experimental blocks, matching, pairing, repeated-measures. A graph of your data faceted by the random factor will be displayed."),
+     tags$li(
+        tags$strong("Boxes 9.1 and 9.2:"),
+        "If you choose 'Mixed' in Box 9, two new options appear. Mixed effects analysis requires a random factor, e.g., experimental blocks, matching, pairing, repeated-measures, which is provided in Box 9.1."),
       tags$li("You can also choose whether values within levels of the random factor are averaged in ",
-              tags$strong("Box 9.2")
+              tags$strong("Box 9.2."),
+              "Please see Instructions for details on averaging technical replicates."
       ),
       tags$li(
-        "After the analyses, if you change variables again in ",
+        "After one round of analyses, if you then go back and change variables in ",
         tags$strong("Boxes 1-3"),
-        " remember to press ",
+        " or use log-transformation in", 
+        tags$strong("Box 8,"),
+        "remember to press ",
         tags$strong("'Variables chosen'"),
-        "on Graphs tab and then click ",
-        tags$strong("'Analyse my data'"), "to update ANOVAs results."
+        "on 'Graphs' tab and then click ",
+        tags$strong("'Analyse my data'"), "to update ANOVA results."
+      ),
+    tags$li(
+      "For model diagnostics, a QQ (Quantile-Quantile) plot of model residuals and a smooth density plot of residuals will be shown. The QQ plot should residuals close to the diagonal straight line suggesting approximal normal distribution of residuals and an acceptable fit of the linear model to the observed data. If the points deviate a lot from the line, this could indicate that the residuals are skewed and model is not appropriate for the data. Similarly, approximately normally distributed residuals show a nearly symmetric smooth density plot around the mean of 0. See Instructions for further details. Proceed to post-hoc comparisons if the model diagnostics are acceptable."),
+      tags$li(
+        tags$strong("Box 10:"),
+        "Choose the type of post-hoc comparisons: 'Pairwise', 'Comparison to reference' or 'Levelwise'. See Instructions for details."
       ),
       tags$li(
-        tags$strong("Box 10"),
-        "for choosing the type of post-hoc comparisons."
-      ),
-      tags$li(
-        "The Linear Model tab below shows the model summary, including the 'formula', which shows fixed and random variables, log-transformation etc, if used."
+        "The 'Linear Model' tab below shows the model summary, including the 'formula', which shows fixed and random variables, log-transformation etc, if used."),
+    tags$li(
+      "The 'Data used for analyses' tab shows the variables used for the graph and analyses.")
       )
-    )
   )))
 })
 
@@ -638,7 +645,7 @@ output$Instr_ANOVA <- renderText({ #in use
         tags$li(tags$strong("Important: If levels of the X-axis variable are dropped from the graph, they will also be lost in ANOVAs."), "The data used in the analyses is seen at the bottom of the 'ANOVAs (linear models) and Comparisons' tab."
       ),
       tags$li(
-        "Optional settings need to be added/declined on the Graphs tab, and the ", tags$strong("'Variables chosen'"), " button pressed before proceeding to ANOVAs tab for analyses. This allows you to 'eye-ball' your data before the analyses. "
+        "Optional settings need to be added/declined on the Graphs tab, and the ", tags$strong("'Variables chosen'"), " button pressed before proceeding to 'ANOVAs (linear models) and Comparisons' tab for analyses. This allows you to 'eye-ball' your data before the analyses. "
       ),
       tags$li(
         tags$strong(
@@ -657,13 +664,13 @@ output$Instr_ANOVA <- renderText({ #in use
       ),
       tags$li("For Mixed effects analysis, a graph of the same type chosen in Box 6 will be shown, but this time faceted by the Random factor. This allows you to see the effect of experimental blocks. A second graph will show data averaged over levels of the Random factor. These data appear at the bottom of the page. "),
       tags$li(
-        "Options for post-hoc comparisons will appear on the ANOVA tab based on the type of analyses."
+        "Options for post-hoc comparisons will appear on the 'ANOVAs (linear models) and Comparisons' tab based on the type of analyses."
       ),
       tags$li(
         "Info buttons on the ANOVA tab provide more information on the ANOVA table, post-hoc comparisons, estimated marginal means (EMMEANS)."
       ),
       tags$li(
-        "The Linear Model tab provides the summary of the linear model fitted to data in R."
+        "The 'Linear Model' tab provides the summary of the linear model fitted to data in R."
       )))
       )
   )

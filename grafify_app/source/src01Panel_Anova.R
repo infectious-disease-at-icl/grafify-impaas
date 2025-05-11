@@ -42,7 +42,7 @@ Panel_Anova <- list(
                #Average RF or not
                label = tooltip(
                  trigger = list(
-                   tags$h3("9"),
+                   tags$h3("9.2"),
                    tags$strong("Choose whether to average replicates grouped by fixed and random factors."),
                    bs_icon("info-circle")
                  ),
