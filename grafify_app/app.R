@@ -34,6 +34,7 @@ source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
 ui <- bslib::page_navbar(
   #ga G-059EWJ6910 for shiny.io
   #ga G-TMCF321TZZ for netlify.app
+  #ga G-X4RTHLTCT6 for impaas.uk
   tags$head(includeHTML("source/head_copilot.html")),
   tags$body(includeHTML("source/body_copilot.html")), 
   #fluid = TRUE,
