@@ -30,6 +30,8 @@ source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
 source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
 source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
 
+last_updated <- format(Sys.time(), "%d %B %Y, %H:%M") #copilot
+
 # Define UI for application that draws a histogram
 ui <- bslib::page_navbar(
   #ga G-059EWJ6910 for shiny.io
@@ -85,7 +87,7 @@ ui <- bslib::page_navbar(
             "grafify online on this website is made possible through Impaas (Imperial Platform as a Service), courtesy of",
             tags$a(href = "https://edtech.pages.doc.ic.ac.uk/", " Robert Chatley and Jason Bailey, Department of Computing, Imperial College London.")
           )
-        )
+        ), tags$li(p(paste("Last updated on:", last_updated))),
         )
         ########## for impaas
       ))), column(
