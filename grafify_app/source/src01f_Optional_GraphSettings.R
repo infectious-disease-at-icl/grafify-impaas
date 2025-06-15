@@ -60,10 +60,10 @@ output$ewid <- renderUI({
       "ewid",
       label = tooltip(
         trigger = list(
-          tags$strong("Change the width of errorbar"),
+          tags$strong("Change the width of errorbars"),
           bs_icon("info-circle")
         ),
-        "Change the width of the horizontal lines at ends of error bars."
+        "Change the width of the horizontal lines at ends of errorbars."
       ),
       value = 0.1, step = 0.1,
       min = 0,
@@ -214,7 +214,9 @@ output$out_box_alpha <- renderUI({
   if (input$graphType %in% c("Boxplot",
                              "Bar graph", 
                              "Violin plot",
-                             "Before after plot"))
+                             "Before after plot",
+                             "Numeric XY 1",      #added for box_wid on xy num graphs
+                             "Numeric XY 2"))     #added for box_wid on xy num graphs
     numericInput(
       "box_alpha",
       #box transparency option
@@ -229,3 +231,157 @@ output$out_box_alpha <- renderUI({
     )
 })
 
+#UI output for boxwidth for XYNum1 and XYNum2 
+#13 Jun 2025
+
+# UI output for new plot_xy_Group 
+# 15 Jun 2025
+#output$out_smoothyesno <- renderUI({
+#  if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
+#    selectizeInput(
+#      "smooth_yesno",
+#      label = tooltip(
+#        trigger = list(tags$strong("Smooth Line"), bs_icon("info-circle")),
+#        "Add a smooth line and then select the type (loess or linear)."
+#      ),
+#      choices = c("Yes", "No"),
+#      options = list(dropdownParent = 'body'),
+#      selected =  "No", 
+#      multiple = FALSE
+#    )
+#})
+
+output$out_smoothType <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
+    selectizeInput(
+      "smooth_Type",
+      label = tooltip(
+        trigger = list(tags$strong("Smooth Line Type"), bs_icon("info-circle")),
+        "Choose whether to fit a loess or linear smooth line."
+      ),
+      choices = c("none", "Loess", "Linear"),
+      options = list(dropdownParent = 'body'),
+      selected =  "none", 
+      multiple = FALSE
+    )
+})
+
+output$error_typeXY <- renderUI({
+  if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
+  selectizeInput(
+    "error_typeXY",
+    label = tooltip(
+      trigger = list(tags$h3("7.1"),
+                     tags$strong("Central value & Dispersion"), bs_icon("info-circle")),
+      "Pick mean and SD/SEM/CI95 error bars, or a box and whiskers plot."
+    ),
+    choices = c("none", "SD", "SEM", "CI95", "Boxplot"),
+    options = list(dropdownParent = 'body'),
+    selected =  "none", 
+  )
+})
+
+output$out_box_wid <- renderUI({
+  if (input$error_typeXY == "Boxplot")
+    numericInput(
+      "box_wid",
+      label = tooltip(
+        trigger = list(tags$strong("Box width"), bs_icon("info-circle")),
+        "Provide width of boxes in same units as the X-axis variable, otherwise a suitable default is calculated."
+      ),
+      value = NULL, min = 0, step = 0.1, 
+    )
+})
+
+observe({
+  if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
+    updateNumericInput(
+      #session = "graphType",
+      inputId = "box_alpha",
+      #label = tags$strong("Choose graph type"),
+      value = 0.5
+    )
+})
+
+output$out_mean_alpha <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+    numericInput(
+      "mean_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of Mean"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of the Mean."
+      ),
+      value = 1, min = 0, max = 1, step = 0.1
+    )
+})
+
+output$out_mean_size <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+    numericInput(
+      "mean_size",
+      label = tooltip(
+        trigger = list(tags$strong("Mean size"), bs_icon("info-circle")),
+        "Choose symbol size for the Mean."
+      ),
+      value = 5, min = 0, max = 15, step = 1
+    )
+})
+
+output$out_line_alpha <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$smooth_Type != "none")
+    numericInput(
+      "line_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of Line"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of the line."
+      ),
+      value = 1, min = 0, max = 1, step = 0.1
+    )
+})
+
+output$out_sm_alpha <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$smooth_Type != "none")
+    numericInput(
+      "sm_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of smooth fit"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of the line."
+      ),
+      value = 0.3, min = 0, max = 1, step = 0.1
+    )
+})
+
+output$out_e_alpha <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+    numericInput(
+      "e_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of errorbars"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of errorbars."
+      ),
+      value = 1, min = 0, max = 1, step = 0.1
+    )
+})
+
+output$ewidXY <- renderUI({
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+    numericInput(
+      "ewidXY",
+      label = tooltip(
+        trigger = list(
+          tags$strong("Change the width of errorbars"),
+          bs_icon("info-circle")
+        ),
+        "Change the width of the horizontal lines at ends of errorbars."
+      ),
+      value = 0.1, step = 0.1,
+      min = 0,
+      max = 1
+    )
+})

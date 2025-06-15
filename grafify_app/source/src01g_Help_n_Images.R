@@ -6,7 +6,7 @@ mainPanel2.1 <- list(layout_columns(col_widths = 12, #used in src_02_headers_hel
                                                   width="90%"),
                                          tags$ul(
                                            tags$li("The types of graphs available depend on the type of variables (cateogrical or numeric)."),
-                                           tags$li("For categorical X-axis variables, the following graphs are possible with all data points shown by default and different wasy of depicting the central tendancy (e.g., median or mean) and dispersion (e.g., whiskers, SD, SEM or CI95 errorbars):"),
+                                           tags$li("For categorical X-axis variables, the following graphs are possible with all data points shown by default and different wasy of depicting the central tendancy (e.g., median or mean) and dispersion (e.g., whiskers, SD, SEM or CI95 error bars):"),
                                            tags$ol(
                                            tags$li("Box and whiskers"), 
                                            tags$li("Violin plot"), 
@@ -40,7 +40,7 @@ mainPanel2.2 <- list(layout_columns(col_widths = 12, #used in src_02_headers_hel
                                            tags$li("If the X-axis variable is numeric, a Grouping factor is required."),
                                            tags$li("The type of X-axis variable and Grouping factor (categorical or numeric) is detected automatically and the graphs option updated to 'Numeric XY 1' (i.e., Grouping factor is categorical) or 'Numeric XY 2' (i.e., Grouping factor is numeric)."),
                                            tags$li("The colour palettes will also be accordingly updated. Note that Shapes variable, if chosen, will be ignored."),
-                                           tags$li("A boxplot can also be shown by choosing 'Yes' in ", tags$strong("Box 7.1."))),
+                                           tags$li("Central tendancy and data dispersion options can be chosen in ", tags$strong("Box 7.1."), "Mean and error bars (SD/SEM/CI95) or box and whiskers can be shown. A loess or linear smooth fit can also be added.")),
                                          tags$img(src="shiny4_graph_types.png",
                                                   align="left",
                                                   width="60%")

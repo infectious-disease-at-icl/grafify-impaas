@@ -20,7 +20,7 @@ plot4dPoint_react <- reactive({
                        ColRev = input$colRev,
                        ColPal = input$colpal,
                        LogYTrans = input$logTrans)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~" (log Y-axis)"))
+      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~"grouped by"~!!input$varsFour~" (log Y-axis)"))
   if(input$logTrans == "") plot_4dPoint <- 
       plot_4d_point_sd(data = df,
                        xcol = !!input$varsOne, 
@@ -39,7 +39,7 @@ plot4dPoint_react <- reactive({
                        ColSeq = input$colSeq,
                        ColRev = input$colRev,
                        ColPal = input$colpal)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo))
+      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~"grouped by"~!!input$varsFour))
   plot_4dPoint
 })
 

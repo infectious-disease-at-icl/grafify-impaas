@@ -1,48 +1,10 @@
 #reactives for AvgRF plot on ANOVA panel
 AvgRFwhichplotChosenGraph <- eventReactive(input$analyseData, {
-  ##boxplot w & w/o facets
-  #if (input$graphType == "Boxplot" &
-  #    input$addVarsOpt == "No" )
-  #  p <- plotBox_react()
-  ##bar graph w & w/o facets
-  #if (input$graphType == "Bar graph" &
-  #    input$addVarsOpt == "No")
-  #  p <- plotBar_react()
-  ##violin graph w & w/o facets
-  #if (input$graphType == "Violin plot"  &
-  #    input$addVarsOpt == "No" )
-  #  p <- plotViolin_react()
-  ##pointSD
-  #if (input$graphType == "Point & Errorbar" &
-  #    input$addVarsOpt == "No" )
-  #  p <- plotPointSD_react()
-  
   #befafter graph w & w/o facets
   if (input$graphType == "Before-after plot"  &
       input$addVarsOpt == "No")
     p <- plotBefAfterAvg_react()
-  
-  #if (input$graphType == "Boxplot" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot4dBox_react()
-  #if (input$graphType == "Bar graph" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot4dBar_react()
-  #if (input$graphType == "Violin plot" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot4dViolin_react()
-  #if (input$graphType == "Point & Errorbar" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot4dPoint_react()
-  #
-  ##XY numeric catGroup
-  #if (input$graphType == "Numeric XY 1" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot_XYCat_react()
-  #if (input$graphType == "Numeric XY 2" &
-  #    input$addVarsOpt == "Yes")
-  #  p <- plot_XYNum_react()
-  
+
   #Density & Histogram
   if (input$graphType == "Density plot")
     p <- plotDensity_react()
@@ -165,7 +127,7 @@ plot4dAvgShapesPoint_react <- reactive({
                        all_jitter = input$sym_jitter,
                        all_alpha = input$pointAllalpha, 
                        all_size = input$pointAllsize, 
-                       #all_shape = input$pointAllshape, 
+                       all_shape = input$pointAllshape, 
                        TextXAngle = input$text_angle,
                        fontsize = input$font_size,
                        ColSeq = input$colSeq,

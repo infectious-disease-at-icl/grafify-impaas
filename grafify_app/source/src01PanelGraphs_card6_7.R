@@ -37,24 +37,34 @@ Graphs_card6_7 <- list(fluidRow(
   )),
   column(
     2,
+    #conditionalPanel(
+    #  "input.graphType == 'Numeric XY 1' || input.graphType == 'Numeric XY 2'",
+    #  selectizeInput(
+    #    "XYBox",
+    #    #show numeric boxplot yes/no
+    #    label = tooltip(
+    #      trigger = list(
+    #        tags$h3("7.1"),
+    #        tags$strong("Show box and whiskers (Yes/No)?"),
+    #        bs_icon("info-circle")
+    #      ),
+    #      "Click 'Yes' and press 'grafify my data' if you would like box and whiskers plot grouped along X-axis."
+    #    ),
+    #    choices = c("Yes", "No"),
+    #    selected = "No",
+    #    multiple = FALSE,
+    #    options = list(dropdownParent = 'body'),
+    #  )
+    #),
     conditionalPanel(
       "input.graphType == 'Numeric XY 1' || input.graphType == 'Numeric XY 2'",
-      selectizeInput(
-        "XYBox",
-        #show numeric boxplot yes/no
-        label = tooltip(
-          trigger = list(
-            tags$h3("7.1"),
-            tags$strong("Show box and whiskers (Yes/No)?"),
-            bs_icon("info-circle")
-          ),
-          "Click 'Yes' and press 'grafify my data' if you would like box and whiskers plot grouped along X-axis."
-        ),
-        choices = c("Yes", "No"),
-        selected = "No",
-        multiple = FALSE,
-        options = list(dropdownParent = 'body'),
-      )
+    uiOutput("error_typeXY"), #for XY summary
+    #uiOutput("out_smoothyesno"), #for Smooth 
+    uiOutput("ewidXY"), #for XY errorvars
+    uiOutput("out_e_alpha"), #for XY errorbars
+    uiOutput("out_box_wid"), #for box width
+    uiOutput("out_smoothType"), #for Smooth type
+    uiOutput("out_sm_alpha") #for Smooth SE alpha
     ),
     
     ######## always on Relevel #################
@@ -89,6 +99,13 @@ Graphs_card6_7 <- list(fluidRow(
       uiOutput("error_type"),
       #errorbar type
       uiOutput("ewid")
+    ),
+    conditionalPanel(
+      "(input.graphType == 'Numeric XY 1' || input.graphType == 'Numeric XY 2') && (input.error_typeXY == 'SD' || input.error_typeXY == 'SEM' input.error_typeXY == 'CI95')",
+      #errorbar type
+      #uiOutput("ewid"),
+      #uiOutput("e_alpha"),
+      uiOutput("line_alpha"),
     )
   ),
 ))

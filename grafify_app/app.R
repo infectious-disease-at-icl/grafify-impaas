@@ -29,8 +29,8 @@ library(dplyr)
 source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
 source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
 source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
-
-last_updated <- format(Sys.time(), "%d %B %Y, %H:%M") #copilot
+app_path <- normalizePath("app.R")
+last_updated <- format(file.info(app_path)$mtime, "%d %B %Y, %H:%M") #copilot
 
 # Define UI for application that draws a histogram
 ui <- bslib::page_navbar(

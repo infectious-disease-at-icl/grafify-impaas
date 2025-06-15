@@ -194,6 +194,9 @@ Graphs_card8 <- list(fluidRow(column(
 #        max = 1
 #      ),
       uiOutput("out_box_alpha"),
+      uiOutput("out_mean_alpha"),
+      uiOutput("out_mean_size"),
+      uiOutput("out_line_alpha"),
       uiOutput("vio_alpha"),
       uiOutput("pointAllalpha"),
       #all points transparency option

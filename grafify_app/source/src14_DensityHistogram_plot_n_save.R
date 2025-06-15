@@ -1,35 +1,42 @@
 source("./source/src14b2_plot_density_histo.R", local = TRUE)
 
+### args code start
 plotDensity_react <- reactive({
-  df <- RelevelFile1.1() #if(input$DoRelevel == "Yes") df <- RelevelFile1()
-  #if(input$DoRelevel == "No") df <- file1()
-  if(input$logTrans %in% c("log10", "log2")) plotDensity <- 
-      plot_density_log(data = df,
-                      TextXAngle = input$text_angle,
-                      c_alpha = input$sym_alpha,
-                      fontsize = input$font_size,
-                      PlotType = input$dens_count_type,
-                      ColSeq = input$colSeq,
-                      ColRev = input$colRev,
-                      ColPal = input$colpal,
-                      group = !!input$varsOne, 
-                      ycol = !!input$varsTwo,
-                      LogYTrans = input$logTrans)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~" (log X-axis)"))
-  if(input$logTrans == "") plotDensity <- 
-      plot_density_log(data = df,
-                      TextXAngle = input$text_angle,
-                      fontsize = input$font_size,
-                      PlotType = input$dens_count_type,
-                      c_alpha = input$sym_alpha,
-                      ColSeq = input$colSeq,
-                      ColRev = input$colRev,
-                      ColPal = input$colpal,
-                      group = !!input$varsOne, 
-                      ycol = !!input$varsTwo)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo))
-  plotDensity
+  df <- RelevelFile1.1()
+  
+  args <- list(data = df,
+               TextXAngle = input$text_angle,
+               c_alpha = input$sym_alpha,
+               fontsize = input$font_size,
+               PlotType = input$dens_count_type,
+               ColSeq = input$colSeq,
+               ColRev = input$colRev,
+               ColPal = input$colpal,
+               group = input$varsOne, 
+               ycol = input$varsTwo)
+  
+  # Add log transformations if specified
+  if (input$logTrans %in% c("log10", "log2")) {
+    args$LogYTrans <- input$logTrans
+  }
+  
+  # Generate plot
+  p <- do.call(plot_density_log, args, quote = FALSE)
+  
+  # Add title
+  title_text <- paste("Plot of ", input$varsOne, " vs ", input$varsTwo, " (", input$dens_count_type, ")", 
+                      sep = "")
+  
+  if (input$logTrans %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X-axis)")
+  } 
+  
+  p + labs(title = title_text)
+  
 })
+
+### args code end
+
 
 fac_plotDensity_react <- reactive({
   p <- plotDensity_react() +
@@ -52,38 +59,44 @@ output$SaveViolin <- downloadHandler(
 )
 
 ###Histogram
+
+### args code histo start
 plotHistogram_react <- reactive({
-  df <- RelevelFile1.1() #if(input$DoRelevel == "Yes") df <- RelevelFile1()
-  #if(input$DoRelevel == "No") df <- file1()
-  if(input$logTrans %in% c("log10", "log2")) plotHistogram <- 
-      plot_histogram_log(data = df,
-                         TextXAngle = input$text_angle,
-                         BinSize = input$Binsize,
-                         PlotType = input$hist_count_type,
-                         c_alpha = input$sym_alpha,
-                         fontsize = input$font_size,
-                         ColSeq = input$colSeq,
-                         ColRev = input$colRev,
-                         ColPal = input$colpal,
-                         group = !!input$varsOne, 
-                         ycol = !!input$varsTwo,
-                         LogYTrans = input$logTrans)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~" (log X-axis)"))
-  if(input$logTrans == "") plotHistogram <- 
-      plot_histogram_log(data = df,
-                         TextXAngle = input$text_angle,
-                         BinSize = input$Binsize,
-                         PlotType = input$hist_count_type,
-                         fontsize = input$font_size,
-                         c_alpha = input$sym_alpha,
-                         ColSeq = input$colSeq,
-                         ColRev = input$colRev,
-                         ColPal = input$colpal,
-                         group = !!input$varsOne, 
-                         ycol = !!input$varsTwo)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo))
-  plotHistogram
+  df <- RelevelFile1.1()
+  
+  args <- list(data = df,
+               TextXAngle = input$text_angle,
+               BinSize = input$Binsize,
+               PlotType = input$hist_count_type,
+               c_alpha = input$sym_alpha,
+               fontsize = input$font_size,
+               ColSeq = input$colSeq,
+               ColRev = input$colRev,
+               ColPal = input$colpal,
+               group = input$varsOne, 
+               ycol = input$varsTwo)
+  
+  # Add log transformations if specified
+  if (input$logTrans %in% c("log10", "log2")) {
+    args$LogYTrans <- input$logTrans
+  }
+  
+  # Generate plot
+  p <- do.call(plot_histogram_log, args, quote = FALSE)
+  
+  # Add title
+  title_text <- paste("Plot of ", input$varsOne, " vs ", input$varsTwo, " (", input$dens_count_type, ")", 
+                      sep = "")
+  
+  if (input$logTrans %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X-axis)")
+  } 
+  
+  p + labs(title = title_text)
+  
 })
+
+### args code histo end
 
 fac_plotHistogram_react <- reactive({
   p <- plotHistogram_react() +

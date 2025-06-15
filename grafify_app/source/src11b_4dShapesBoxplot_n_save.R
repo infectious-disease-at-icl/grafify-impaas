@@ -17,7 +17,7 @@ plot4dShapesBox_react <- reactive({
                          xcol = !!input$varsOne, 
                          ycol = !!input$varsTwo,
                          LogYTrans = input$logTrans)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~" (log Y-axis)"))
+      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~"grouped by"~!!input$varsFour~" (log Y-axis)"))
   if(input$logTrans == "") plot_4dShapesBox <- 
       plot_4d_scatterbox(data = df,
                          symsize = input$sym_size,
@@ -33,7 +33,7 @@ plot4dShapesBox_react <- reactive({
                          boxes = !!input$varsFour,
                          xcol = !!input$varsOne, 
                          ycol = !!input$varsTwo)+
-      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo))
+      labs(title = expr("Plot of"~!!input$varsOne~"vs"~!!input$varsTwo~"grouped by"~!!input$varsFour))
   plot_4dShapesBox
 })
 

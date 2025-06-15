@@ -105,7 +105,7 @@ Panel_Anova <- list(
         column(
           10,
           #conditional panel for faceted plot
-          conditionalPanel(condition = "input.MorS == 'Mixed' && output.RFLev_txt == 'Levels within Random Factor are mapped to symbol shapes.'", 
+          conditionalPanel(condition = "input.MorS == 'Mixed' && input.graphType != 'Numeric XY 1' && input.graphType != 'Numeric XY 2' && output.RFLev_txt == 'Levels within Random Factor are mapped to symbol shapes.'", 
                            plotOutput("avgRandFplot", height = "40vw"))
         )
         )

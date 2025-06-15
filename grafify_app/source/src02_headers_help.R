@@ -71,7 +71,7 @@ output$graphsHelpOpen <- renderText({ #in use on Graphs landing
       ),
       tags$li(
         tags$strong("Box 7.1:"),
-        "A different kind Box 7.1 appears when both X and Y are numeric variables: a Yes/No choice of whether to show a connecting line through numeric X-Y plot."
+        "A different kind of Box 7.1 and related boxes appear when both X and Y are numeric variables. These boxes contain options to show central tendancy (mean/median) and dispersion (SD/SEM/CI95/box & whiskers). A loess or linear smooth line can also be addded."
       ),
      tags$li(
        "Press ",
