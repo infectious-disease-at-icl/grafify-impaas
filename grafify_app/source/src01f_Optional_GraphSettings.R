@@ -1,157 +1,7 @@
 #optional choices for graphs
 
-#UI output for plot_point_sd transparency
-output$pointAllalpha <- renderUI({
-  if (input$graphType == "Point & Errorbar")
-    numericInput(
-      "pointAllalpha",
-      label = tooltip(
-        trigger = list(
-          tags$strong("Opacity of all symbols except the mean (0-1)"),
-          bs_icon("info-circle")
-        ),
-        "Reduce to below 1 to make boxes or bars transparent. When set to 0, symbols will disappear."
-      ),
-      value = 0.4, step = 0.1,
-      min = 0,
-      max = 1
-    )
-})
-
-#UI output for plot_point_sd sizes
-output$pointAllsize <- renderUI({
-  if (input$graphType == "Point & Errorbar")
-    numericInput(
-      "pointAllsize",
-      label = tooltip(
-        trigger = list(
-          tags$strong("Adjust size of all symbols except the mean"),
-          bs_icon("info-circle")
-        ),
-        "Increase or decrease size of data points."
-      ),
-      value = 2.5, step = 0.5,
-      min = 0,
-      max = 10
-    )
-})
-#UI output for plot_point_sd shaapes
-output$pointAllshape <- renderUI({
-  if (input$graphType == "Point & Errorbar" & 
-      input$ShapesOpt == "No")
-    numericInput(
-      "pointAllshape",
-      label = tooltip(
-        trigger = list(
-          tags$strong("Change shape of all symbols except the mean (1-25)"),
-          bs_icon("info-circle")
-        ),
-        "Change the shape of data points."
-      ),
-      value = 1, step = 1,
-      min = 1,
-      max = 25
-    )
-})
-#UI output for plot_point_sd & bars errorbar width
-output$ewid <- renderUI({
-  if (input$graphType %in% c("Point & Errorbar", "Bar graph"))
-    numericInput(
-      "ewid",
-      label = tooltip(
-        trigger = list(
-          tags$strong("Change the width of errorbars"),
-          bs_icon("info-circle")
-        ),
-        "Change the width of the horizontal lines at ends of errorbars."
-      ),
-      value = 0.1, step = 0.1,
-      min = 0,
-      max = 1
-    )
-})
-#UI output for histogram bindwidth
-output$Binsize <- renderUI({
-  if (input$graphType %in% c("Histogram plot"))
-    numericInput(
-      "Binsize",
-      label = tooltip(
-        trigger = list(
-          tags$strong("Change the binsize for histograms"),
-          bs_icon("info-circle")
-        ),
-        "The default is 30, increase or decreaes this for binning values into groups for histograms."
-      ),
-      value = 30, step = 1,
-      min = 5,
-      max = 100
-    )
-})
-
-#UI output for ColSeq options TRUE/FALSE
-output$colSeqOut <- renderUI({
-  selectizeInput(
-    "colSeq",
-    label = tooltip(
-      trigger = list(tags$strong("Colour sequence"), bs_icon("info-circle")),
-      "Colours for categorical variables are picked sequentially from the chosen colour palette (Default). If set to FALSE, the most distant colours are chosen."
-    ),
-    choices = c(TRUE, FALSE),
-    selected = TRUE,
-    options = list(dropdownParent = 'body'),
-    multiple = FALSE
-  )
-})
-
-#UI output for ColRev options TRUE/FALSE
-output$colRevOut <- renderUI({
-  selectizeInput(
-    "colRev",
-    label = tooltip(
-      trigger = list(
-        tags$strong("Reverse swatch order?"),
-        bs_icon("info-circle")
-      ),
-      "Whether or not to pick colours from palette swatches in default or reverse order. Set to TRUE for the order to be reversed."
-    ),
-    choices = c(TRUE, FALSE),
-    selected = FALSE,
-    options = list(dropdownParent = 'body'),
-    multiple = FALSE
-  )
-})
-
-#UI output for errorbar type SD/SEM/CI95
-#changed to dropdown list for consistency on Jan 19
-output$error_type <- renderUI({
-  if (input$graphType %in% c("Bar graph", "Point & Errorbar"))
-    selectizeInput(
-      "error_type",
-      label = tooltip(
-        trigger = list(tags$strong("Error Bars"), bs_icon("info-circle")),
-        "Pick type of errorbars on Bar or Point & Errorbar graphs."
-      ),
-      choices = c("CI95", "SD", "SEM"),
-      options = list(dropdownParent = 'body'),
-      selected =  "SD", 
-    )
-})
-#UI output for Violin transparency
-output$vio_alpha <- renderUI({
-  if (input$graphType == "Violin plot")
-    #violin alpha
-    numericInput(
-      "vio_alpha",
-      label = tooltip(
-        trigger = list(tags$strong("Violin opacity (0-1)"), bs_icon("info-circle")),
-        "Reduce to below 1 to make violins transparent. When set to 0, violins will appear white in colour."
-      ),
-      value = 1,
-      max = 1, min = 0, step = 0.1
-    )
-})
-
 #facet scales option
+#output in src01PanelGraphs_card4_5
 output$facet_scaleOut <- renderUI({
   if (input$facetingOpt == "Yes")
     selectizeInput(
@@ -170,11 +20,12 @@ output$facet_scaleOut <- renderUI({
       selected = "Fixed XY",
       options = list(dropdownParent = 'body'),
       multiple = FALSE
-      )
+    )
 })
 
 
 ## Output for density counts
+#output in src01PanelGraphs_card6_7
 output$dens_counts <- renderUI({
   if (input$graphType %in% c("Density plot"))
     selectizeInput(
@@ -192,6 +43,7 @@ output$dens_counts <- renderUI({
 })
 
 ## Output for histogram counts
+#output in src01PanelGraphs_card6_7
 output$hist_counts <- renderUI({
   if (input$graphType %in% c("Histogram plot"))
     selectizeInput(
@@ -208,26 +60,38 @@ output$hist_counts <- renderUI({
     )
 })
 
-
-## Output for box alpha, conditional
-output$out_box_alpha <- renderUI({
-  if (input$graphType %in% c("Boxplot",
-                             "Bar graph", 
-                             "Violin plot",
-                             "Before after plot",
-                             "Numeric XY 1",      #added for box_wid on xy num graphs
-                             "Numeric XY 2"))     #added for box_wid on xy num graphs
+#UI output for plot_point_sd & bars errorbar width
+#output in src01PanelGraphs_card6_7
+output$ewid <- renderUI({
+  if (input$graphType %in% c("Point & Errorbar", "Bar graph"))
     numericInput(
-      "box_alpha",
-      #box transparency option
+      "ewid",
       label = tooltip(
-        trigger = list(tags$strong("Box or Bar opacity (0-1)"), bs_icon("info-circle")),
-        "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
+        trigger = list(
+          tags$strong("Change the width of errorbars"),
+          bs_icon("info-circle")
+        ),
+        "Change the width of the horizontal lines at ends of errorbars."
       ),
-      value = 1,
+      value = 0.1, step = 0.1,
       min = 0,
-      max = 1,
-      step = 0.1
+      max = 1
+    )
+})
+#UI output for errorbar type SD/SEM/CI95
+#changed to dropdown list for consistency on Jan 19
+#output in src01PanelGraphs_card6_7
+output$error_type <- renderUI({
+  if (input$graphType %in% c("Bar graph", "Point & Errorbar"))
+    selectizeInput(
+      "error_type",
+      label = tooltip(
+        trigger = list(tags$strong("Error Bars"), bs_icon("info-circle")),
+        "Pick type of errorbars on Bar or Point & Errorbar graphs."
+      ),
+      choices = c("CI95", "SD", "SEM"),
+      options = list(dropdownParent = 'body'),
+      selected =  "SD", 
     )
 })
 
@@ -251,6 +115,7 @@ output$out_box_alpha <- renderUI({
 #    )
 #})
 
+#output in src01PanelGraphs_card6_7
 output$out_smoothType <- renderUI({
   #observe(input$smooth_yesno, input$graphType)
   if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
@@ -266,7 +131,7 @@ output$out_smoothType <- renderUI({
       multiple = FALSE
     )
 })
-
+#output in src01PanelGraphs_card6_7
 output$error_typeXY <- renderUI({
   if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
   selectizeInput(
@@ -281,9 +146,13 @@ output$error_typeXY <- renderUI({
     selected =  "none", 
   )
 })
-
+#output in src01PanelGraphs_card6_7
 output$out_box_wid <- renderUI({
-  if (input$error_typeXY == "Boxplot")
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$error_typeXY)
+  if (input$error_typeXY == "Boxplot" 
+      )
     numericInput(
       "box_wid",
       label = tooltip(
@@ -294,6 +163,7 @@ output$out_box_wid <- renderUI({
     )
 })
 
+#updating default options after user selection of graphs
 observe({
   if (input$graphType %in% c("Numeric XY 1", "Numeric XY 2"))
     updateNumericInput(
@@ -304,48 +174,14 @@ observe({
     )
 })
 
-output$out_mean_alpha <- renderUI({
-  #observe(input$smooth_yesno, input$graphType)
-  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
-    numericInput(
-      "mean_alpha",
-      label = tooltip(
-        trigger = list(tags$strong("Opacity of Mean"), bs_icon("info-circle")),
-        "Reduce the value below 1 to control the transparency of the Mean."
-      ),
-      value = 1, min = 0, max = 1, step = 0.1
-    )
-})
-
-output$out_mean_size <- renderUI({
-  #observe(input$smooth_yesno, input$graphType)
-  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
-    numericInput(
-      "mean_size",
-      label = tooltip(
-        trigger = list(tags$strong("Mean size"), bs_icon("info-circle")),
-        "Choose symbol size for the Mean."
-      ),
-      value = 5, min = 0, max = 15, step = 1
-    )
-})
-
-output$out_line_alpha <- renderUI({
-  #observe(input$smooth_yesno, input$graphType)
-  if (input$smooth_Type != "none")
-    numericInput(
-      "line_alpha",
-      label = tooltip(
-        trigger = list(tags$strong("Opacity of Line"), bs_icon("info-circle")),
-        "Reduce the value below 1 to control the transparency of the line."
-      ),
-      value = 1, min = 0, max = 1, step = 0.1
-    )
-})
-
+#output in src01PanelGraphs_card6_7
 output$out_sm_alpha <- renderUI({
-  #observe(input$smooth_yesno, input$graphType)
-  if (input$smooth_Type != "none")
+  #observeEvent(input$smooth_yesno)
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$smooth_Type)
+  if (input$smooth_Type %in% c("none", "Loess", "Linear") 
+      )
     numericInput(
       "sm_alpha",
       label = tooltip(
@@ -355,10 +191,14 @@ output$out_sm_alpha <- renderUI({
       value = 0.3, min = 0, max = 1, step = 0.1
     )
 })
-
+#output in src01PanelGraphs_card6_7
 output$out_e_alpha <- renderUI({
-  #observe(input$smooth_yesno, input$graphType)
-  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+  #observeEvent(input$smooth_yesno)
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$error_typeXY)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95") 
+      )
     numericInput(
       "e_alpha",
       label = tooltip(
@@ -368,9 +208,13 @@ output$out_e_alpha <- renderUI({
       value = 1, min = 0, max = 1, step = 0.1
     )
 })
-
+#output in src01PanelGraphs_card6_7
 output$ewidXY <- renderUI({
-  if (input$error_typeXY %in% c("SD", "SEM", "CI95"))
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$error_typeXY)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95")
+      )
     numericInput(
       "ewidXY",
       label = tooltip(
@@ -383,5 +227,207 @@ output$ewidXY <- renderUI({
       value = 0.1, step = 0.1,
       min = 0,
       max = 1
+    )
+})
+
+#output in src01PanelGraphs_card8
+output$out_mean_alpha <- renderUI({
+  #observe(input$smooth_yesno, input$graphType)
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$error_typeXY)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95")
+  )
+    numericInput(
+      "mean_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of Mean"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of the Mean."
+      ),
+      value = 1, min = 0, max = 1, step = 0.1
+    )
+})
+#output in src01PanelGraphs_card8
+output$out_mean_size <- renderUI({
+  #observeEvent(input$smooth_yesno)
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$error_typeXY)
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95")
+  )
+    numericInput(
+      "mean_size",
+      label = tooltip(
+        trigger = list(tags$strong("Mean size"), bs_icon("info-circle")),
+        "Choose symbol size for the Mean."
+      ),
+      value = 5, min = 0, max = 15, step = 1
+    )
+})
+#output in src01PanelGraphs_card8
+output$out_line_alpha <- renderUI({
+  #observeEvent(input$smooth_yesno)
+  #req() fixes Warning: Error in if: argument is of length zero
+  #30/09/2025
+  req(input$smooth_Type)
+  if (input$smooth_Type %in% c("none", "Loess", "Linear")
+  )
+    numericInput(
+      "line_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Opacity of Line"), bs_icon("info-circle")),
+        "Reduce the value below 1 to control the transparency of the line."
+      ),
+      value = 1, min = 0, max = 1, step = 0.1
+    )
+})
+
+#UI output for histogram bindwidth
+#output in src01PanelGraphs_card8
+output$Binsize <- renderUI({
+  if (input$graphType %in% c("Histogram plot"))
+    numericInput(
+      "Binsize",
+      label = tooltip(
+        trigger = list(
+          tags$strong("Change the binsize for histograms"),
+          bs_icon("info-circle")
+        ),
+        "The default is 30, increase or decreaes this for binning values into groups for histograms."
+      ),
+      value = 30, step = 1,
+      min = 5,
+      max = 100
+    )
+})
+
+#UI output for plot_point_sd transparency
+#output in src01PanelGraphs_card8
+output$pointAllalpha <- renderUI({
+  if (input$graphType == "Point & Errorbar")
+    numericInput(
+      "pointAllalpha",
+      label = tooltip(
+        trigger = list(
+          tags$strong("Opacity of all symbols except the mean (0-1)"),
+          bs_icon("info-circle")
+        ),
+        "Reduce to below 1 to make boxes or bars transparent. When set to 0, symbols will disappear."
+      ),
+      value = 0.4, step = 0.1,
+      min = 0,
+      max = 1
+    )
+})
+
+#UI output for plot_point_sd sizes
+#output in src01PanelGraphs_card8
+output$pointAllsize <- renderUI({
+  if (input$graphType == "Point & Errorbar")
+    numericInput(
+      "pointAllsize",
+      label = tooltip(
+        trigger = list(
+          tags$strong("Adjust size of all symbols except the mean"),
+          bs_icon("info-circle")
+        ),
+        "Increase or decrease size of data points."
+      ),
+      value = 2.5, step = 0.5,
+      min = 0,
+      max = 10
+    )
+})
+#UI output for plot_point_sd shapes
+#output in src01PanelGraphs_card8
+output$pointAllshape <- renderUI({
+  if (input$graphType == "Point & Errorbar" & 
+      input$ShapesOpt == "No")
+    numericInput(
+      "pointAllshape",
+      label = tooltip(
+        trigger = list(
+          tags$strong("Change shape of all symbols except the mean (1-25)"),
+          bs_icon("info-circle")
+        ),
+        "Change the shape of data points."
+      ),
+      value = 1, step = 1,
+      min = 1,
+      max = 25
+    )
+})
+
+#UI output for ColSeq options TRUE/FALSE
+#output in src01PanelGraphs_card8
+output$colSeqOut <- renderUI({
+  selectizeInput(
+    "colSeq",
+    label = tooltip(
+      trigger = list(tags$strong("Colour sequence"), bs_icon("info-circle")),
+      "Colours for categorical variables are picked sequentially from the chosen colour palette (Default). If set to FALSE, the most distant colours are chosen."
+    ),
+    choices = c(TRUE, FALSE),
+    selected = TRUE,
+    options = list(dropdownParent = 'body'),
+    multiple = FALSE
+  )
+})
+
+#UI output for ColRev options TRUE/FALSE
+#output in src01PanelGraphs_card8
+output$colRevOut <- renderUI({
+  selectizeInput(
+    "colRev",
+    label = tooltip(
+      trigger = list(
+        tags$strong("Reverse swatch order?"),
+        bs_icon("info-circle")
+      ),
+      "Whether or not to pick colours from palette swatches in default or reverse order. Set to TRUE for the order to be reversed."
+    ),
+    choices = c(TRUE, FALSE),
+    selected = FALSE,
+    options = list(dropdownParent = 'body'),
+    multiple = FALSE
+  )
+})
+
+#UI output for Violin transparency
+#output in src01PanelGraphs_card8
+output$vio_alpha <- renderUI({
+  if (input$graphType == "Violin plot")
+    #violin alpha
+    numericInput(
+      "vio_alpha",
+      label = tooltip(
+        trigger = list(tags$strong("Violin opacity (0-1)"), bs_icon("info-circle")),
+        "Reduce to below 1 to make violins transparent. When set to 0, violins will appear white in colour."
+      ),
+      value = 1,
+      max = 1, min = 0, step = 0.1
+    )
+})
+
+## Output for box alpha, conditional
+#output in src01PanelGraphs_card8
+output$out_box_alpha <- renderUI({
+  if (input$graphType %in% c("Boxplot",
+                             "Bar graph", 
+                             "Violin plot",
+                             "Before after plot",
+                             "Numeric XY 1",      #added for box_wid on xy num graphs
+                             "Numeric XY 2"))     #added for box_wid on xy num graphs
+    numericInput(
+      "box_alpha",
+      #box transparency option
+      label = tooltip(
+        trigger = list(tags$strong("Box or Bar opacity (0-1)"), bs_icon("info-circle")),
+        "Reduce to below 1 to make boxes or bars transparent. When set to 0, boxes and bars will appear white in colour."
+      ),
+      value = 1,
+      min = 0,
+      max = 1,
+      step = 0.1
     )
 })

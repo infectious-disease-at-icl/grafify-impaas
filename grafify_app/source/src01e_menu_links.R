@@ -1,3 +1,4 @@
+# all of these are used in app.R
 link_shenoy <- tags$a(
   shiny::icon("box-arrow-up-right"), "Shenoy lab",
   href = "https://shenoylab.com",

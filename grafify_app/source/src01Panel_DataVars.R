@@ -4,7 +4,7 @@ Panel_DataVars <- list(fluidRow(column(
     #starting help on data
     accordion_panel(
       "Readme: Getting started (can be minimised)",
-      htmlOutput("dataHelpOpen")
+      htmlOutput("dataHelpOpen") #from src02_headers_help.R
     )
   )
 )),
@@ -12,16 +12,16 @@ tags$br(),
 card(card_header(tags$h5("Data & variables")), value = 1, #tab panel for data & variables value 1
      fluidRow(
        column(3, fluidRow(
-         column(12, htmlOutput("varsel1")),
+         column(12, htmlOutput("varsel1")), #app.R
          #X-var varsOne
-         column(12, htmlOutput("varsel2")),
+         column(12, htmlOutput("varsel2")), #app.R
          #Y-var varsTwo
          column(
            12,
            #conditional panel to show after start button
            conditionalPanel(
              condition = "output.started == 'Now pick variables.'",
-             htmlOutput("addVarsOut"),
+             htmlOutput("addVarsOut"),         
              selectizeInput(
                "addVarsOpt",
                #Add grouping var Yes/No button

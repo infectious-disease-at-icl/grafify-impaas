@@ -60,9 +60,11 @@ observeEvent(input$ContrHelper, {
     title = "Types of post-hoc comparisons",
     tags$div(tags$ul(
       tags$li(tags$strong("Pairwise:"), tags$em(" All versus all comparison. This is rarely the preferred choice when there are lots of levels within factors.")),
-      tags$li(tags$strong("Compare to reference: "), tags$em("Compare a reference or control group with all others. This option is only available with 1way-ANOVA designs. Choose the number of the reference group in the dropdown list below.")),
-      tags$li(tags$strong("Levelwise 1: "), tags$em("Compare all groups of the first factor with each other at each level of the second factor.")),
-      tags$li(tags$strong("Levelwise 2: "), tags$em("Compare all groups of the second factor with each other at each level of the first factor."))
+      tags$li(tags$strong("Compare to reference: "), tags$em("Compare a reference or control group with all others. Choose the number of the reference group in the dropdown list below (this is the order of groups in the graph or Boxes 7.1 and 7.2).")),
+      tags$li(tags$strong("Levelwise 1: "), tags$em("Compare all groups of the first factor (chosen in Box 1) with each other at each level of the second factor (Box 3.1).")),
+      tags$li(tags$strong("Levelwise 2: "), tags$em("Compare all groups of the second factor (chosen in Box 3.1) with each other at each level of the first factor (Box 1).")),
+      tags$li(tags$strong("Compare to reference 2way - 1: "), tags$em("Compare a reference or control group within the first factor (chosen in Box 1)  at each level of the second factor (Box 3.1). Choose the number of the reference group in the dropdown list below (this is the order of groups in the graph or Boxes 7.1 and 7.2).")),
+      tags$li(tags$strong("Compare to reference 2way - 2: "), tags$em("Compare a reference or control group within the second factor (chosen in Box 3.1)  at each level of the first factor (Box 1). Choose the number of the reference group in the dropdown list below (this is the order of groups in the graph or Boxes 7.1 and 7.2)."))
     )),
     easyClose = TRUE,
     footer = NULL

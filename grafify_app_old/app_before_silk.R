@@ -1,44 +1,42 @@
-#parts of the UI spread across 8 src01Panel___.R files
+#parts of the UI spread across 8 src01Panel---.R files
 #
-library(grafify)      #for graphs and analyses
-library(bslib)        #for themes
-library(bsicons)      #for icons
-library(shinyBS)      #for BS tooltip
-library(shiny)        #for app
+library(grafify)
+library(bslib)   #for theme
+library(bsicons) #for icons
+library(shinyBS) #for BS tooltip
+library(shiny)
 library(shinyWidgets) #for updated shiny
-library(colourpicker) #for single colour graphs
-library(readxl)       #for file upload
-library(readr)        #for file upload
-library(ggplot2)      #for facet_grid and others
-library(lmerTest)     #for lmerMod
-library(emmeans)      #for posthoc comparisons
-library(rlang)        #for !! calls
-library(gt)           #for colour tables
-library(shinyjqui)    #for drag and drop
-library(dplyr)        #for mutate
+library(colourpicker) #for single colour
+library(readxl)   #for file upload
+library(readr)    #for file upload
+library(ggplot2)  #for facet_grid and others
+library(lmerTest) #for lmerMod
+library(emmeans)  #for posthoc comparisons
+library(rlang)    #for !! calls
+library(gt)       #for colour tables
+library(shinyjqui) #for drag and drop
+library(dplyr)
 
-#next few lines required for shinylive only
+#next few lines for shinylive only
 #library(showtext)
 #font_add("Arial", "www/fonts/arial.ttf")
 #font_add("Courier", "www/fonts/cour.ttf")
 #showtext_auto()
 
 #source files for UI parts
+#source("./source/src01c2long_GraphOpts_sidebar_ui.R", local = TRUE) #for fonts, colours, symbols, box/violin transparency, errorbars
+#this versin of mainbar has no sidebar & has GraphOpts next to graph card
 source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
 source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
 source("./source/src01g_Help_n_Images.R", local = TRUE) #For landing page
-
-#for relative subfolder, such as www
 app_path <- normalizePath("app.R")
-
-#time stamp
-last_updated <- format(file.info(app_path)$mtime, "%d %B %Y, %H:%M") #copilot code 
+last_updated <- format(file.info(app_path)$mtime, "%d %B %Y, %H:%M") #copilot
 
 # Define UI for application that draws a histogram
 ui <- bslib::page_navbar(
   #ga G-059EWJ6910 for shiny.io
   #ga G-TMCF321TZZ for netlify.app
-  #for anonymous counting of usage
+  #ga G-X4RTHLTCT6 for impaas.uk
   tags$head(includeHTML("source/head_copilot.html")),
   tags$body(includeHTML("source/body_copilot.html")), 
   #fluid = TRUE,
@@ -51,35 +49,29 @@ ui <- bslib::page_navbar(
                    #theme
                    bg = "#ffffff",
                    fg = "#121111",
-                   #primary = "#4444ab",                                   #shinylive
-                   #secondary = "#55224D",                                 #shinylive
-                   #info = "#44abab",                                      #shinylive
-                   #success = "#296E13",                                   #shinylive
-                   #`enable-shadows` = TRUE,                               #shinylive
-                   #`enable-rounded` = TRUE,                               #shinylive
-                   #base_font = font_face("sans-serif", src = "/fonts"),   #shinylive
-                   #code_font = font_face("monospace", src = "/fonts"),    #shinylive
+                   #primary = "#4444ab",
+                   #secondary = "#55224D",
+                   #info = "#44abab",
+                   #success = "#296E13",
+                   #`enable-shadows` = TRUE,  #shinylive
+                   #`enable-rounded` = TRUE,  #shinylive
+                   #base_font = font_face("sans-serif", src = "/fonts"), #shinylive
+                   #code_font = font_face("monospace", src = "/fonts"),  #shinylive
                    #heading_font = font_face("sans-serif", src = "/fonts") #shinylive
   ),
   #main title
   title = "grafify online",
-  
   #sidebar for main page
-  
+  #main panel with graphs
   bslib::nav_panel(
     width = 12,
     title = "Graphs and Analysis",
-    
     #main panel sourced from src01 *mainbar* file
     mainPanel(width = 12, fluidRow(
       column(2, tagList(
-        tags$div(tags$img(src = "grafify.png", 
-                          width = "70%"), 
-                 style = "text-align: center;")
-      )), 
-      column(5, tagList(tags$div(
-        tags$h5("grafify"), 
-        tags$ul(tags$li(
+        tags$div(tags$img(src = "grafify.png", width = "70%"), style = "text-align: center;")
+      )), column(5, tagList(tags$div(
+        tags$h5("grafify"), tags$ul(tags$li(
           tags$h6(
             "You can use grafify online to plot graphs, and easily perform ANOVAs and post-hoc comparisons just like the ",
             tags$a(href = "https://grafify-vignettes.netlify.app/", "R package.")
@@ -88,9 +80,19 @@ ui <- bslib::page_navbar(
           tags$h6(
             "The main advantages of grafify are the use of ggplot2 and various colourblind-friendly palettes, and easy access to linear models and linear mixed effects analyses for ANOVAs. These are more powerful and appropriate when experiments are designed as randomised blocks or have repeated measures."
           )
-        ), tags$li(p(paste("Last updated on:", last_updated))),)
-      ))), 
-      column(3, card(
+        ),
+        ############ for impaas
+        tags$li(
+          tags$h6(
+            "grafify online on this website is made possible through Impaas (Imperial Platform as a Service), courtesy of",
+            tags$a(href = "https://edtech.pages.doc.ic.ac.uk/", " Robert Chatley and Jason Bailey, Department of Computing, Imperial College London.")
+          )
+        ), tags$li(p(paste("Last updated on:", last_updated))),
+        )
+        ########## for impaas
+      ))), column(
+        3,
+        card(
           card_header(
             tags$h5("Start here"),
             #start button
@@ -108,7 +110,7 @@ ui <- bslib::page_navbar(
             "Upload a CSV or Excel File",
             accept = c(".csv", ".xlsx", ".xls")
           ),
-          uiOutput("sheetSelector"), #from app.R
+          uiOutput("sheetSelector"),
           actionBttn(
             inputId = "startBtn",
             #start button
@@ -122,17 +124,14 @@ ui <- bslib::page_navbar(
             style = "unite",
             #icon = bs_icon("power")
           ),
-          bsTooltip("startBtn", 
-                    title = "Test Title", 
-                    trigger = "hover")
+          bsTooltip("startBtn", title = "Test Title", trigger = "hover")
         )
       )
-    ), 
-    ),
+    ), ),
     mainPanel(mainPanel1, #from src01e_mainbar_navbarFluidRows & src01e_menu_links.R
               width = 12)
   ),
-  
+  #nav_panel(title = ""),
   #main menu bar names and links
   nav_panel(title = "Instructions", 
             mainPanel(width = 9,
@@ -151,25 +150,20 @@ ui <- bslib::page_navbar(
                                  tags$br(),
                                  htmlOutput("Instr_ANOVA"))
                       ),
-            )
-            ),
-  
+            )),
   #links on menu bar sourced from src01e_menu_links
   nav_menu(
     title = "Links",
     align = "left",
-    #shenoy lab
-    nav_item(link_shenoy),   
-    #GitHub
+    nav_item(link_shenoy),   #shenoylab.com
     nav_item(link_github),
-    #grafify vignettes
+    #grafify github
     nav_item(link_vignettes),
-    #microbio stats
+    #vignettes
     nav_item(link_biostats),
-    #r coding workshop
     nav_item(link_rcoding)
   ),
-  
+  #biostats book
   #favicon for browswers in www folder
   tags$head(tags$link(rel = "shortcut icon", href = "grafify.ico"))
 )
@@ -198,7 +192,6 @@ server <- function(input, output, session) {
     }
     file1
   })
-  
   #sheet selector UI for Excel file
   output$sheetSelector <- renderUI({
     req(input$file1)
@@ -342,7 +335,7 @@ server <- function(input, output, session) {
       label = tooltip(
         trigger = list(
           tags$h3("9.1"),
-          tags$strong("Random factor for Mixed ANOVA."),
+          tags$strong("Choose a categorical random variable for mixed effects analysis."),
           bs_icon("info-circle")
         ),
         "Choose a column from your data. Note: a random intercepts model will be fitted."
@@ -355,33 +348,35 @@ server <- function(input, output, session) {
   })
   #Random varsSix UI output Box 9.1
   output$varsel6 <- renderUI({
-    req(input$MorS)
     if (input$MorS == "Mixed")
       v6Input()
   })
-  
-  #UI output to select a Vars3 if Shapes is yes
+  #UI output for Simple/Mixed ANOVA
+  #  output$RandFac <- renderUI({
+  #    if (input$MorS == "Mixed")
+  #      uiOutput("RandFac")
+  #  })
+  #UI output if Shapes is yes
   output$addShapes <- renderUI({
     if (input$ShapesOpt == "Yes")
       uiOutput("varsel3")
   })
-  #UI output to select vars5 if Faceting is yes
+  #UI output if Faceting is yes
   output$addFacets <- renderUI({
     if (input$facetingOpt == "Yes")
       uiOutput("varsel5")
   })
-  #UI output for selecting vars4 for Grouping variable
+  #UI output for Grouping variable
   output$addMoreVars <- renderUI({
     if (input$addVarsOpt == "Yes")
       uiOutput("varsel4")
   })
   
   #reactive to get a conditional panel match for start button click
-  # condition panel used in src01Panel_DataVars.R
   startedq <- eventReactive(input$startBtn, {
     txt <- paste("Now pick variables.")
   })
-  #UI output for start reactive for conditional above
+  #UI output for start reactive
   output$started <- renderText({
     startedq()
   })
@@ -393,7 +388,7 @@ server <- function(input, output, session) {
          local = TRUE,
          echo = TRUE)
   
-  #update default colour palettes if numeric XY2 graph
+  #updated colour palettes for numeric XY + numeric Grouping graphs
   observe({
     if (input$graphType == "Numeric XY 2")
       updateSelectInput(
@@ -410,7 +405,7 @@ server <- function(input, output, session) {
       )
   })
   
-  #update back to default colour palettes if user goes back after numeric XY2
+  #updated colour palettes for numeric XY + categorical Grouping graphs
   observe({
     if (input$graphType != "Numeric XY 2")
       updateSelectInput(
@@ -434,23 +429,23 @@ server <- function(input, output, session) {
       )
   })
   
-#  #UI output for for X-axis log transformations
-#  output$logTransX <- renderUI({
-#    if (Xnum() == TRUE)
-#      #graph_log X
-#      pickerInput(
-#        "logTransX",
-#        label = tooltip(
-#          trigger = list(tags$strong("Log(X) axis"), bs_icon("info-circle")),
-#          "Pick a log-X axis if X-axis variable is also numeric. Log-transformed data will be used in analyses."
-#        ),
-#        choices = c("", "log10", "log2"),
-#        selected = "",
-#        multiple = FALSE
-#      )
-#  })
-#  #use UI output even when hidden
-#  outputOptions(output, "logTransX", suspendWhenHidden = FALSE)
+  #UI output for for X-axis log transformations
+  output$logTransX <- renderUI({
+    if (Xnum() == TRUE)
+      #graph_log X
+      pickerInput(
+        "logTransX",
+        label = tooltip(
+          trigger = list(tags$strong("Log(X) axis"), bs_icon("info-circle")),
+          "Pick a log-X axis if X-axis variable is also numeric. Log-transformed data will be used in analyses."
+        ),
+        choices = c("", "log10", "log2"),
+        selected = "",
+        multiple = FALSE
+      )
+  })
+  #use UI output even when hidden
+  outputOptions(output, "logTransX", suspendWhenHidden = FALSE)
   
   #UI output for violin transparency
   observe({
@@ -464,9 +459,7 @@ server <- function(input, output, session) {
   })
   #UI output of transparency if not violins
   observe({
-    if (!input$graphType %in% c("Violin plot",
-                                "Numeric XY 1",
-                                "Numeric XY 2") )
+    if (input$graphType != "Violin plot")
       updateNumericInput(
         inputId = "box_alpha",
         min = 0, step = 0.1,
@@ -544,13 +537,7 @@ server <- function(input, output, session) {
     if (Xnum() == FALSE)
       updateNumericInput(inputId = "text_angle", value = 45)
   })
-  
-  #Next set of reactives are for updating input data table
-  #based on user-defined levels in vars1 and vars2
-  #This varies based on 1way or 2way designs, or XY1 
-  
-  #Reactive for reordering X groups 
-  #This reactive forces vars1 to factors and provides levels
+  #Reactive for reordering X groups
   RelevelNames <- reactive({
     #force to factors and levels originally from data
     #get levels within categorical X-axis
@@ -562,23 +549,18 @@ server <- function(input, output, session) {
     flev
   })
   #UI output text for user about reordering
-  #output in src01PanelGraphs_card6_7
   output$newRelevel <- renderText({
     txt <- paste(paste(RelevelNames(), collapse = ", "))
     txt
   })
   ############## always on Grouping relevel
-  #output in src01PanelGraphs_card6_7
   output$newRelevelGp <- renderText({
     txt <- paste(paste(RelevelNamesGp(), collapse = ", "))
     txt
   })
-  
-  #Reactive for reordering Grouping vars4
-  #This reactive forces vars4 to factors and provides levels
   RelevelNamesGp <- reactive({
     #force to factors and levels originally from data
-    #get levels within categorical X-axis
+    #get levels within Grouping variable
     req(file1())
     f <- file1()
     ############ always on relevel
@@ -587,8 +569,7 @@ server <- function(input, output, session) {
     flev
   })
   
-  #Update/relevel X axis vars1 groups and get new table
-  #This is when X and vars4 are categorical
+  #drop levels for X axis and get new table
   RelevelFile1 <- reactive({
     #force to factors and levels originally from data
     #then from user input of groups as new levels
@@ -598,8 +579,9 @@ server <- function(input, output, session) {
     ######### relevel with dplyr
     req(input$varsReLevel, input$varsReLevelGp)
     observe(input$addVarsOpt)
-    if(is.numeric(file1()[[input$varsOne]]) || 
-       is.numeric(file1()[[input$varsFour]]) ) {
+    if(is.numeric(file1()[[input$varsOne]]) #|| 
+       #is.numeric(file1()[[input$varsFour]]) 
+       ) {
       return(file1())
     }
     file1() %>% 
@@ -609,8 +591,7 @@ server <- function(input, output, session) {
              across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))
     })
   
-  #Update/relevel X axis vars1 groups and get new table
-  #This is for XY1 graphs (categorical vars4)
+  #reactive for XYCatGp
   RelevelFile1.2 <- reactive({
     #force to factors and levels originally from data
     #then from user input of groups as newlevels
@@ -627,7 +608,6 @@ server <- function(input, output, session) {
   
   ######### reactive when there is no Grouping variable 
   #drop levels for X axis and get new table
-  #This is for 1way designs
   RelevelFile1.1 <- reactive({
     #force to factors and levels originally from data
     #then from user input of groups as newlevels
@@ -643,9 +623,8 @@ server <- function(input, output, session) {
       filter(get(input$varsOne) %in% input$varsReLevel) %>% 
       mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)))
   })
-  
   ########
-  #reactive to make user table for main landing page
+  #reactive to make user table
   tabInput <- eventReactive(input$startBtn, {
     file2 <- file1()
     yname <- colnames(file2)[colnames(file2) == input$varsTwo]
@@ -671,7 +650,7 @@ server <- function(input, output, session) {
   #source of emmeans calls
   source("./source/src03b_emmeans.R", local = TRUE, echo = TRUE)
   #source of ANOVA and Residuals plots calls
-  source("./source/src03d_anova_n_residuals_SimpMixed_B.R",
+  source("./source/src03d_anova_n_residuals_SimpMixed.R",
          local = TRUE,
          echo = TRUE)
   #source graph types without/with shapes & faceting
@@ -687,6 +666,7 @@ server <- function(input, output, session) {
   source("./source/src06_matchplot_n_save.R",
          local = TRUE,
          echo = TRUE)
+  
   source("./source/src08_violinplot_n_save.R",
          local = TRUE,
          echo = TRUE)
@@ -729,19 +709,16 @@ server <- function(input, output, session) {
   source("./source/src11h_4dShapesPointpoint_n_save.R",
          local = TRUE,
          echo = TRUE)
-  #plot func is in src14b_plot_density_histo
+  #source with tooltips for i icons
+  source("./source/src12_tooltips.R", local = TRUE)
+  source("./source/src13_numericXYplot_n_save.R",
+         local = TRUE,
+         echo = TRUE)
   source("./source/src14_DensityHistogram_plot_n_save.R",
          local = TRUE,
          echo = TRUE)
   
-  #source with tooltips for i icons
-  source("./source/src12_tooltips.R", 
-         local = TRUE,
-         echo = TRUE)
-  source("./source/src13_numericXYplot_n_save.R",
-         local = TRUE,
-         echo = TRUE)
-
+  
   #main reactive with conditions for which graph to plot
   whichplotChosenGraph <- eventReactive(input$makegraph, {
     #boxplot w & w/o facets
@@ -849,7 +826,7 @@ server <- function(input, output, session) {
   
   #output$plotChosenGraph <- renderPlot({ whichplotChosenGraph() })
   
-  #add single colour on chosen graph if user selects one
+  #add single colour on chosen graph
   PlotSingCol <- eventReactive(input$makegraph, {
     ifelse(input$facetingOpt == "Yes",
            p <- whichplotChosenGraph() +
@@ -861,15 +838,9 @@ server <- function(input, output, session) {
        CatGp() == TRUE){singColnum <- CatGplevels()}
     if(input$addVarsOpt == "No" & 
        Xnum() == FALSE) {singColnum <- Xlevels()}
-    
-    #input$colPick from src01PanelGraphs_card8.R
-    #also in src03d_anova_n_residuals_SimpleMixed...
-    #also in src15_AvgRF_graphs
-    ifelse (input$colPick == "No" , 
+    ifelse (input$colPick == "No" ,
             p <- p,
             p <- p +
-              #input$colPick2 from src01PanelGraphs_card8.R
-              #also used in src03d_anova_n_residuals_SimpleMixed...
               scale_fill_manual(values = rep(input$colPick2, 
                                              times = singColnum)))
     p

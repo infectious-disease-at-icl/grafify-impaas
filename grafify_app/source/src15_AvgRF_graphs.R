@@ -1,5 +1,7 @@
 #reactives for AvgRF plot on ANOVA panel
 AvgRFwhichplotChosenGraph <- eventReactive(input$analyseData, {
+  req(c(input$graphType,
+        input$addVarsOpt))
   #befafter graph w & w/o facets
   if (input$graphType == "Before-after plot"  &
       input$addVarsOpt == "No")
@@ -57,7 +59,7 @@ AvgRFPlotSingCol <- eventReactive(input$analyseData, {
   #       p <- AvgRFwhichplotChosenGraph())
   
   ########ignore faceting 
-  observe(input$MorS)
+  req(input$MorS)
   if(input$MorS == "Mixed" &
      RFLevs() >= 25){
     p <- PlotSingCol()}
@@ -86,7 +88,7 @@ AvgRFPlotSingCol <- eventReactive(input$analyseData, {
 #used for warning if >25 levels
 RFLevs <- eventReactive(input$analyseData, {
   req(avgFile1())
-  observe(input$MorS)
+  req(input$MorS)
   if(input$MorS == "Simple"){nRFLev <- "A"}
   if(input$MorS == "Mixed"){ 
     df <- avgFile1()
@@ -94,19 +96,20 @@ RFLevs <- eventReactive(input$analyseData, {
   nRFLev
 })
 
-output$RFLev_txt <- renderText({
+output$RFLev_txt <- renderUI({
   if (RFLevs() >= 25){
-    txt <- paste(
-      "Random Factor has more than 25 levels, which are too many to map to symbol shapes."
-    )}
+    
+    txt <- HTML(paste(tags$h6("Random Factor has more than 25 levels, which are too many to map to symbol shapes.")))
+    }
   if (RFLevs() < 25){
-    txt <- paste(
-      "Levels within Random Factor are mapped to symbol shapes."
-    )}
+    txt <- HTML(paste(tags$h6("Levels within Random Factor are mapped to symbol shapes.")))
+    }
   if (RFLevs() == "A"){
-    txt <- paste(
-      "Simple linear model chosen (no Random Factor used)."
-    )}
+    txt <- NULL
+        #txt <- paste(
+    #  "Simple linear model chosen (no Random Factor used)."
+    #)
+    }
   txt
 })
 

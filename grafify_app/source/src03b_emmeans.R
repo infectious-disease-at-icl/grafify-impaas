@@ -1,3 +1,5 @@
+# 02/10/2025 update Compare to reference 2way options
+
 #get variables as a or a*b for lmer and emmeans specs
 dep <- reactive({
   observe({c(input$logTransX, input$addVarsOpt)})
@@ -56,23 +58,49 @@ emmLev2 <- reactive({
   fml <- as.formula(sprintf('%s ~ %s', 
                             "pairwise", emmDep))
 })
+
+#### start - 2way trt.vs.ctrl contrasts 02/10/2025
+emm2wLev1 <- reactive({
+  observe(c(input$emm_type, input$addVarsOpt))
+  if(input$emm_type == "Compare to reference - 2way 1" & 
+     input$addVarsOpt == "Yes")
+    emmDep <- paste(input$varsOne, input$varsFour, 
+                    sep = "|")
+  fml <- as.formula(sprintf('%s ~ %s', 
+                            "trt.vs.ctrl", emmDep))
+})
+#reactive for emmeans specs Levelwise2
+emm2wLev2 <- reactive({
+  observe(c(input$emm_type, input$addVarsOpt))
+  if(input$emm_type == "Compare to reference - 2way 2" & 
+     input$addVarsOpt == "Yes")
+    emmDep <- paste(input$varsFour, input$varsOne, 
+                    sep = "|")
+  fml <- as.formula(sprintf('%s ~ %s', 
+                            "trt.vs.ctrl", emmDep))
+})
+
+#### end - 2way trt.vs.ctrl contrasts 02/10/2025 
+
 #reactive for emmeans specs trt.vs.ctrl
 emmRef <- reactive({
   observe(c(input$emm_type, input$addVarsOpt))
   if(input$emm_type == "Compare to reference" & 
-     input$addVarsOpt == "No")
+     input$addVarsOpt == "No"){
     emmDep <- paste(input$varsOne)
   fml <- as.formula(sprintf('%s ~ %s', 
-                            "trt.vs.ctrl", emmDep))
+                            "trt.vs.ctrl", emmDep))}
 })
 #UI output SelectInput for Ref level with trt.vs.ctrl
 output$emmRefType <- renderUI({
   observe({input$emm_type})
-  if(input$emm_type == "Compare to reference")
+  if(input$emm_type %in% c("Compare to reference",
+                         "Compare to reference - 2way 1",
+                         "Compare to reference - 2way 2")){
     numericInput(#session = "graphType", 
       inputId = "emm_Reftype",
       label = tags$strong("Choose reference level (only numbers 1, 2.. allowed)"), 
-      value = 1, min = 1, step = 1, max = 100)
+      value = 1, min = 1, step = 1, max = 100)}
 })
 #reactive to get ref level to give emmeans
 #nRefval <- reactive({ 
@@ -88,6 +116,10 @@ emmFml <- reactive({
   if(input$emm_type == "Levelwise 1") fml <- emmLev1()
   if(input$emm_type == "Levelwise 2") fml <- emmLev2()
   if(input$emm_type == "Compare to reference") fml <- emmRef()
+  ### for 2way - start
+  if(input$emm_type == "Compare to reference - 2way 1") fml <- emm2wLev1()
+  if(input$emm_type == "Compare to reference - 2way 2") fml <- emm2wLev2()
+  ### for 2way - end
   fml
 })
 
@@ -210,5 +242,7 @@ observe({
       #label = tags$strong("Choose graph type"),
       choices = c("Pairwise",
                   "Levelwise 1",
-                  "Levelwise 2"))
+                  "Levelwise 2",
+                  "Compare to reference - 2way 1",
+                  "Compare to reference - 2way 2"))
 })

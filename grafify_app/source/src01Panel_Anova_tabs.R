@@ -1,3 +1,6 @@
+# 02/10/2025 has tabsetPanels for ANOVA page
+# this plots residuals on main tab and mixed model ones on second tab
+
 Panel_Anova <- list(
   fluidRow(column(
     12, accordion(
@@ -8,54 +11,27 @@ Panel_Anova <- list(
         tags$br()
       )
     ),  tags$br(), 
-  ),column(10, card( tags$br(), 
+  ),
+  column(12, card(tags$br(), 
     fluidRow(
       column(
-        3,
-        #card(card_header(tags$h6("Type of linear model")),
-        selectizeInput(
-          "MorS",
-          multiple = FALSE,
-          #Type of ANOVA simple/mixed
-          label = tooltip(
-            trigger = list(
-              tags$h3("9"),
-              tags$strong("Choose simple or mixed effects model."),
-              bs_icon("info-circle")
-            ),
-            "A simple linear model is an ordinary 1-way or 2-way ANOVA. For a mixed effects linear models, in addition to fixed factors",
-            tags$strong("Boxes 1-3"),
-            "a random factor is required (e.g., experimental blocks, matching or repeated-measures)."
-          ),
-          choices = c("Choose one" =
-                        "", c("Simple", "Mixed")),
-          options = list(dropdownParent = 'body')
-        )
+        4,
+        htmlOutput("outnewMorS"),       #from src03d_anova_n_residuals_SimpMixed
       ),
-      column(4, htmlOutput("varsel6")),
+      column(4, htmlOutput("varsel6")), #app.R    
       column(4, 
-             conditionalPanel(
-               "input.MorS == 'Mixed'",  
-             selectizeInput(
-               "AvgRF",
-               multiple = FALSE,
-               #Average RF or not
-               label = tooltip(
-                 trigger = list(
-                   tags$h3("9.2"),
-                   tags$strong("Choose whether to average replicates grouped by fixed and random factors."),
-                   bs_icon("info-circle")
-                 ),
-                 "If a Random factor is selected, you can choose to average replicates within the levels of this variable or not."
-               ),
-               choices = c("Choose one" =
-                             "", c("Yes", "No")),
-               selected = "Yes",
-               options = list(dropdownParent = 'body')
-             ))),
+             htmlOutput("outnewAvgRF"), #from src03d_anova_n_residuals_SimpMixed
+             ),
       #Random factor choice varsSix
       #empty columns for formatting
+      #column(12),
+      #column(6),
+      column(6,                         #from src03d_anova_n_residuals_SimpMixed
+             htmlOutput("newAvgRF_msg"),
+      ),
       column(12),
+      column(12),
+      tags$br(),
       column(
         3,
         #card(card_header(tags$h6("Click to analyse data")),
@@ -68,12 +44,17 @@ Panel_Anova <- list(
           style = "unite",
           icon = bs_icon("power")
         )
-      ),
-      column(6,
-             conditionalPanel(condition = "input.MorS == 'Mixed' && input.AvgRF == 'Yes'", 
-                              HTML("Replicates, if any, within levels of the Random Factor, grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, will be averaged and their means used to fit a random intercepts model."))),
+      )
     )
   ))),
+  tabsetPanel(
+    tags$br(),
+    tabPanel(
+      tags$h5("Plots of residuals"),
+      width = 12,
+      value = 2,
+      #tags$br(),
+      mainPanel(width = 12,
   fluidRow(
     column(10, card(
       card_header(
@@ -87,30 +68,49 @@ Panel_Anova <- list(
       #htmlOutput("qq_head"),
       fluidRow(
         column(5, plotOutput(
-          "ModPlot", #QQ plot of residuals
+          "ModPlot", #QQ plot from src03d_anova_n_residuals_SimpMixed
           width = "25vw", height = "25vw"
         )),
         column(5, plotOutput(
-          "ModPlotDist", #Density plot of residuals
+          "ModPlotDist", #Density plot from src03d_anova_n_residuals_SimpMixed
           width = "25vw", height = "25vw"
+        ))
+      )) #new end to QQ & Density plots
+    ))
+      )), 
+  tabPanel(
+    tags$h5("Additional plots of Mixed models"),
+    width = 12,
+    value = 2,
+    #tags$br(),
+    mainPanel(width = 12,
+  fluidRow(
+    column(10, card(height = "40vw",
+      card_header(
+        "Additional plots 1 (for Mixed models - faceted by levels of Random factor)",
+        tooltip(
+          bs_icon("info-circle"),
+          "Plots will appear for Mixed models only, faceted by levels within the Random factor. If graphs do not appear, press 'Analyse Data'."
         )),
-        column(
-          10,
-          #conditional panel for faceted plot
-          conditionalPanel(condition = "input.MorS == 'Mixed'", 
-                           plotOutput("RandFplot", height = "40vw"))
-        ), 
-        column(10, 
-               textOutput("RFLev_txt")),
-        column(
-          10,
-          #conditional panel for faceted plot
-          conditionalPanel(condition = "input.MorS == 'Mixed' && input.graphType != 'Numeric XY 1' && input.graphType != 'Numeric XY 2' && output.RFLev_txt == 'Levels within Random Factor are mapped to symbol shapes.'", 
-                           plotOutput("avgRandFplot", height = "40vw"))
-        )
-        )
-    ))          #Plot faceted by random factor
-    ,
+      tags$br(),
+      plotOutput("RandFplot", 
+                 height = "40vw"))),  #from src03d_anova_n_residuals_SimpMixed
+    column(10, card(
+      card_header(
+      "Additional plots 2 (for Mixed models - Random factor mapped to shapes)",
+      tooltip(
+        bs_icon("info-circle"),
+        "Plots will appear for Mixed models with levels within the Random factor mapped to shapes of data symbols. If graphs do not appear, press 'Analyse Data'."
+      )),
+      tags$br(),
+      #uiOutput("RFLev_txt"),
+      tags$br(),
+      plotOutput("avgRandFplot", 
+                 height = "40vw"))  #from src03d_anova_n_residuals_SimpMixed
+      ))
+    ))
+  ),
+  fluidRow(
     column(
       10,
       #card(card_header("",
@@ -123,9 +123,9 @@ Panel_Anova <- list(
         style = "unite"
       ),
       tags$br(),
-      htmlOutput("anova_head"),
+      htmlOutput("anova_head"),     #from src02_headers_help.R
       #ANOVA table header
-      gt_output("AnovaTab1"),
+      gt_output("AnovaTab1"),       #from src03d_anova_n_residuals_SimpMixed
       #ANOVA table
       tags$br(),
       tags$br(),
@@ -143,9 +143,9 @@ Panel_Anova <- list(
         style = "unite"
       ),
       tags$br(),
-      htmlOutput("emmeans_head"),
+      htmlOutput("emmeans_head"), #from src02_headers_help.R
       #EMMEANS table header
-      gt_output("Comp1"),
+      gt_output("Comp1"),         #from src03b_emmeans
       #EMMEANS table
       tags$br(),
       tags$br(),
@@ -174,7 +174,7 @@ Panel_Anova <- list(
         options = list(dropdownParent = 'body'),
         multiple = FALSE
       ),
-      uiOutput("emmRefType"),
+      uiOutput("emmRefType"),     #from src03b_emmeans
       #Post-hoc comparison output
       tags$br()
     ),
@@ -190,10 +190,10 @@ Panel_Anova <- list(
         style = "unite"
       ),
       tags$br(),
-      htmlOutput("contrasts_head"),
+      htmlOutput("contrasts_head"),      #from src02_headers_help.R
       #Posthoc comparisons help button
       tags$br(),
-      gt_output("Comp2"),
+      gt_output("Comp2"),                #from src03b_emmeans
       #Posthoc comparisons
       tags$br()
     ),
@@ -216,9 +216,10 @@ Panel_Anova <- list(
         tags$h6(
           "This is the summary of the fitted model. It shows model parameters, such as residual SE, coefficients etc. For simple or ordinar linear models, grafify uses the lm() function from base R. For mixed effects models, grafify uses the lmer() function from the lme4 and lmerTest packages. "
         ),
-        verbatimTextOutput("ModSummary"),
+        #from src03d_anova_n_residuals_SimpMixed
+        verbatimTextOutput("ModSummary"),  #Linear model from R
         tags$br()
-      )                 #Linear model from R
+      )                 
     ),
     column(
       10,
@@ -237,8 +238,9 @@ Panel_Anova <- list(
         ),
         #Linear model panel
         HTML("The table below includes the variables used in the analysis, which were chosen in Boxes 1-3. For Mixed effects analyses, means of replicate values of the response variable, if any, (chosen in Box 2) within levels of the random variable (chosen in Box 9), along with the Median, SD and Counts are shown."),
-        gt_output("avgFile_out"),
-      )                 #Linear model from R
+        #from src03d_anova_n_residuals_SimpMixed
+        gt_output("avgFile_out"),       #Table used for analyses
+      )                 
     )
   )
 )

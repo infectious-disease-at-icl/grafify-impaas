@@ -1,4 +1,5 @@
-#reactive for faceting variables
+#reactive for creating faceting variable as formula
+#this is used in facet_grid() in PlotSingCol in app.R
 FacVars <- eventReactive(input$varsDone, {
   #start when varsDone is clicked
   observe(input$facetingOpt)
@@ -38,6 +39,7 @@ Xnum <- eventReactive(input$varsDone, {
   Xnum <- f[[input$varsOne]] #get name of variable
   is.numeric(Xnum)           #output
 })
+
 #How many groups in X-axis variable
 #used for emmeans pairwise and reordering X-axis groups
 output$XforRelevel <- renderText({
@@ -57,7 +59,8 @@ output$XforRelevel <- renderText({
 })
 
 ######## always on Grouping relevel
-output$GpforRelevel <- renderText({
+#output on src01PanelGraphs_card6_7
+output$GpforRelevel <- renderText({       
   #get X-axis type from Xnum() reactive
   observe(input$addVarsOpt)
   if(input$addVarsOpt == "No"){
@@ -80,7 +83,7 @@ output$GpforRelevel <- renderText({
 })
 
 #levels in Grouping factor, if it is categorical
-#used for single colour graphs
+#used for single colour graphs in src03d_GraphTypeChoices.R
 CatGplevels <- eventReactive(input$varsDone, {
   req(file1())
   f <- file1()
@@ -92,7 +95,9 @@ CatGplevels <- eventReactive(input$varsDone, {
 })
 
 #how many levels in categorical X-axis
-#used by emmeans pairwise, reodering X-axis groups & SingleColour
+#used by emmeans pairwise, reodering X-axis groups 
+#& SingleColour in src03d_GraphTypeChoices.R
+#& src03d_anova_n_residuals_SimpMixed
 Xlevels <- eventReactive(input$varsDone, {
   req(file1())
   f <- file1()
@@ -122,7 +127,7 @@ output$XlevelNames <- renderText({
   txt
 })
 #do you want to reorder X variable?
-#reorder X variables
+#reorder X variables from vars1
 selVarsReLevel <- eventReactive(input$varsDone, {
   #get names of groups if categorical X-axis
   req(file1())
@@ -150,7 +155,7 @@ selVarsReLevel <- eventReactive(input$varsDone, {
   )
 })
 ########## always on grouping relevel
-
+#reorder Gp variables from vars4
 selVarsReLevelGp <- eventReactive(input$varsDone, {
   #get names of groups if categorical Grouping variable
   #observe(input$addVarsOpt)
@@ -193,6 +198,7 @@ output$selVarsReLevelGp <- renderUI({
 })
 
 #is Y-axis variable numeric?
+#used in src03_emmeans
 Ynum <- eventReactive(input$varsDone, {
   req(file1())
   f <- file1()
@@ -201,6 +207,7 @@ Ynum <- eventReactive(input$varsDone, {
 })
 
 #Is Grouping variable categorical?
+#used in src03_emmeans.. , src03d_anova_n_residuals_SimpMixed.. , src15_AvgRF_graphs
 CatGp <- eventReactive(input$varsDone, {
   req(file1())
   f <- file1()
@@ -216,6 +223,7 @@ CatGp <- eventReactive(input$varsDone, {
 
 #get levels within shapes
 #used for warning if >25 levels
+#output in src01ePanelGraphs_card6_7
 ShapeLevs <- eventReactive(input$varsDone, {
   req(file1())
   f <- file1()
@@ -241,6 +249,7 @@ output$OutYnum <- renderText({
   Ynum()
 })
 #UI output for type of Shapes variables (production)
+#output in src01ePanelGraphs_card6_7
 output$ShapeLevs <- renderText({
   observe(input$varsDone)
   if (ShapeLevs() >= 25)

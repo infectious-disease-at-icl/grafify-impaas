@@ -36,6 +36,7 @@ Graphs_card8 <- list(fluidRow(column(
         options = list(dropdownParent = 'body'),
         multiple = FALSE
       ),
+      #from src01_Optional_GraphSettings
       uiOutput("colSeqOut"),
       #ColSeq option
       uiOutput("colRevOut"),
@@ -193,6 +194,7 @@ Graphs_card8 <- list(fluidRow(column(
 #        min = 0,
 #        max = 1
 #      ),
+  #uiOutputs from src01f_Optional_GraphSettings
       uiOutput("out_box_alpha"),
       uiOutput("out_mean_alpha"),
       uiOutput("out_mean_size"),

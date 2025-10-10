@@ -31,49 +31,33 @@ Graphs_card6_7 <- list(fluidRow(
   #conditional panel if XY is numeric & boxplot wanted?
   column(4, card(
     tags$strong("Available options:"), 
-    textOutput("ShapeLevs"), 
-    textOutput("XforRelevel"),
-    textOutput("GpforRelevel")
+    textOutput("ShapeLevs"),       #from src01e_GraphTypeChoices
+    textOutput("XforRelevel"),     #from src01e_GraphTypeChoices
+    textOutput("GpforRelevel")     #from src01e_GraphTypeChoices
   )),
   column(
     2,
-    #conditionalPanel(
-    #  "input.graphType == 'Numeric XY 1' || input.graphType == 'Numeric XY 2'",
-    #  selectizeInput(
-    #    "XYBox",
-    #    #show numeric boxplot yes/no
-    #    label = tooltip(
-    #      trigger = list(
-    #        tags$h3("7.1"),
-    #        tags$strong("Show box and whiskers (Yes/No)?"),
-    #        bs_icon("info-circle")
-    #      ),
-    #      "Click 'Yes' and press 'grafify my data' if you would like box and whiskers plot grouped along X-axis."
-    #    ),
-    #    choices = c("Yes", "No"),
-    #    selected = "No",
-    #    multiple = FALSE,
-    #    options = list(dropdownParent = 'body'),
-    #  )
-    #),
     conditionalPanel(
       "input.graphType == 'Numeric XY 1' || input.graphType == 'Numeric XY 2'",
-    uiOutput("error_typeXY"), #for XY summary
-    #uiOutput("out_smoothyesno"), #for Smooth 
-    uiOutput("ewidXY"), #for XY errorvars
-    uiOutput("out_e_alpha"), #for XY errorbars
-    uiOutput("out_box_wid"), #for box width
-    uiOutput("out_smoothType"), #for Smooth type
-    uiOutput("out_sm_alpha") #for Smooth SE alpha
+      #from src01f_Optional_GraphSettings.R
+    uiOutput("error_typeXY"),      #for XY summary
+    #uiOutput("out_smoothyesno"),  #for Smooth 
+    uiOutput("ewidXY"),            #for XY errorvars
+    uiOutput("out_e_alpha"),       #for XY errorbars
+    uiOutput("out_box_wid"),       #for box width
+    uiOutput("out_smoothType"),    #for Smooth type
+    uiOutput("out_sm_alpha")       #for Smooth SE alpha
     ),
     
     ######## always on Relevel #################
     conditionalPanel(
     "output.XforRelevel != 'The X-axis variable is numeric.'",
+    #from src01e_GraphTypeChoices
     htmlOutput("selVarsReLevel"),
     tags$strong("Order of X-axis groups: "),
     #reorder X-axis groups
-    textOutput("newRelevel")
+    #from app.R
+    textOutput("newRelevel")       
     )
   ),
   column(2, 
@@ -82,13 +66,15 @@ Graphs_card6_7 <- list(fluidRow(
            htmlOutput("selVarsReLevelGp"),
            #reorder X-axis groups
            tags$strong("Order of levels in the Grouping variable: "),
+           #from app.R
            textOutput("newRelevelGp")#)
          )
     ),
   column(
     3,
+    #uiOutputs from src01f_Optional_GraphSettings.R
     conditionalPanel("input.graphType == 'Density plot'", 
-                     uiOutput("dens_counts")),
+                     uiOutput("dens_counts")), 
     conditionalPanel("input.graphType == 'Histogram plot'", 
                      uiOutput("Binsize"),
                      uiOutput("hist_counts")),
