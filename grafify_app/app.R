@@ -87,8 +87,12 @@ ui <- bslib::page_navbar(
         ), tags$li(
           tags$h6(
             "The main advantages of grafify are the use of ggplot2 and various colourblind-friendly palettes, and easy access to linear models and linear mixed effects analyses for ANOVAs. These are more powerful and appropriate when experiments are designed as randomised blocks or have repeated measures."
-          )
-        ), tags$li(p(paste("Last updated on:", last_updated))),)
+          ), 
+        ), tags$h6(
+          "grafify online on this website is made possible through Impaas (Imperial Platform as a Service), courtesy of",
+          tags$a(href = "https://edtech.pages.doc.ic.ac.uk/", " Robert Chatley and Jason Bailey, Department of Computing, Imperial College London.")
+        ),
+        tags$li(p(paste("Last updated on:", last_updated))),)
       ))), 
       column(3, card(
           card_header(
