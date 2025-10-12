@@ -590,8 +590,7 @@ plot_AvgXYCat_react <- reactive({
                    x = !!input$varsOne,
                    y = !!input$varsTwo,
                    size = !!input$varsSix),
-               shape = 21)+
-    scale_size(range = c(2, 10))
+               shape = 21)
   
 })
 
@@ -670,7 +669,6 @@ plot_AvgXYNum_react <- reactive({
                    x = !!input$varsOne,
                    y = !!input$varsTwo,
                    size = !!input$varsSix),
-               shape = 21)+
-    scale_size(range = c(2, 10))
+               shape = 21)
   
 })
