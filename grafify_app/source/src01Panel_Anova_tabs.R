@@ -11,8 +11,7 @@ Panel_Anova <- list(
         tags$br()
       )
     ),  tags$br(), 
-  ),
-  column(12, card(tags$br(), 
+  ),column(12, card(tags$br(), 
     fluidRow(
       column(
         4,
@@ -87,24 +86,21 @@ Panel_Anova <- list(
   fluidRow(
     column(10, card(height = "40vw",
       card_header(
-        "Additional plots 1 (for Mixed models - faceted by levels of Random factor)",
+        "Additional plots 1 (Press 'Analyse my data' if graphs do not appear). Graphs will be faceted by levels of Random factor.",
         tooltip(
           bs_icon("info-circle"),
-          "Plots will appear for Mixed models only, faceted by levels within the Random factor. If graphs do not appear, press 'Analyse Data'."
+          "Plots will appear for Mixed models only, faceted by levels within the Random factor."
         )),
-      tags$br(),
       plotOutput("RandFplot", 
                  height = "40vw"))),  #from src03d_anova_n_residuals_SimpMixed
     column(10, card(
       card_header(
-      "Additional plots 2 (for Mixed models - Random factor mapped to shapes)",
+      "Additional plots 2 (Press 'Analyse my data' if graphs do not appear). Random factor will be mapped to symbol shapes or size.",
       tooltip(
         bs_icon("info-circle"),
-        "Plots will appear for Mixed models with levels within the Random factor mapped to shapes of data symbols. If graphs do not appear, press 'Analyse Data'."
+        "Plots will appear for Mixed models with levels within the Random factor mapped to shapes of data symbols, or their size (for Numeric XY graphs)."
       )),
-      tags$br(),
       #uiOutput("RFLev_txt"),
-      tags$br(),
       plotOutput("avgRandFplot", 
                  height = "40vw"))  #from src03d_anova_n_residuals_SimpMixed
       ))

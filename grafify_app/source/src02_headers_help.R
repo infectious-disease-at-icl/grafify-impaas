@@ -277,6 +277,7 @@ output$contrasts_head <- renderText({ #in use in ANOVA tab
          ))
 })
 
+# Instructions tabs
 output$Instr_Data <- renderText({ #in use in Instructions Data tab
   HTML(paste0(tags$div(
     tags$h5("Uploading data and picking variables:"),
@@ -675,3 +676,22 @@ output$Instr_ANOVA <- renderText({ #in use
       )
   )
   })
+
+
+### FAQs
+output$Instr_FAQs <- renderText({ #in use
+  HTML(paste0(tags$div(
+    tags$br(),
+    tags$h5("Tips to avoid errors:"),
+    tags$ol(
+      tags$li(
+        "Ensure that the data is correctly formatted with no spaces in column names (instead use an underscore '_' to separate words). Some special characters, such as Greek letters, may also cause errors."),
+      tags$li(
+        "If there is an error, reload the app (reload/refresh the page). Repeatedly chaning variables and performing analyes may also lead to errors. Analyses errors may be due to missing values in data table"),
+      tags$li(
+        "Analyses does not produce ANOVA tables or graphs: this may be because you did not first plot a graph of the data in the Graphs tab."),
+      tags$li("Two-way analysis failed: is your grouping variable (Box 3.1) entered as numbers in the data table (e.g., Time in min or years or other units), even though you meant to use these as categorical groups? Enter them as alphanumeric values (e.g., 10min, 20min; y20204, y2025 and so on) so that the app does not assume it to be numeric.")
+    ))
+    
+  ))
+})

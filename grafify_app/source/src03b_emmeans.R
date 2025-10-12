@@ -162,6 +162,9 @@ output$Comp1 <- render_gt({
       align = "center",
       columns = everything()) %>%
     opt_interactive() %>% 
+    tab_options(
+      table.width = pct(100),
+      ihtml.use_pagination = FALSE) %>% 
     fmt_auto()
 })
 
@@ -192,6 +195,9 @@ output$Comp2 <- render_gt({
     align = "center",
     columns = everything()) %>%
     opt_interactive() %>% 
+    tab_options(
+      table.width = pct(100),
+      ihtml.use_pagination = FALSE) %>% 
     fmt_auto()
   })
 

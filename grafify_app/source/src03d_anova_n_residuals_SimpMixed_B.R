@@ -62,7 +62,8 @@ output$avgFile_out <- render_gt({
   gt(avgdf1) %>% 
     opt_interactive() %>% 
     tab_options(
-      table.width = pct(100)) %>% 
+      table.width = pct(100),
+      ihtml.use_pagination = FALSE) %>% 
     fmt_auto()
   })
 
@@ -164,6 +165,9 @@ output$AnovaTab1 <- render_gt({
       align = "center",
       columns = everything()) %>%
     opt_interactive() %>% 
+    tab_options(
+      table.width = pct(100),
+      ihtml.use_pagination = FALSE) %>% 
     fmt_auto()
 })
 

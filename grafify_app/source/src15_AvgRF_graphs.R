@@ -45,6 +45,12 @@ AvgRFwhichplotChosenGraph <- eventReactive(input$analyseData, {
     if (input$graphType == "Point & Errorbar" &
         input$addVarsOpt == "Yes")
       p <- plot4dAvgShapesPoint_react()
+    if (input$graphType == "Numeric XY 1" &
+        input$addVarsOpt == "Yes")
+      p <- plot_AvgXYCat_react()
+    if (input$graphType == "Numeric XY 2" &
+        input$addVarsOpt == "Yes")
+      p <- plot_AvgXYNum_react()    
 
   #output reactive graph p
   p
@@ -511,3 +517,160 @@ plotBefAfterAvg_react <- reactive({
 })
 
 
+#### to make size mapped XY1 & XY2 graphs based on AvgRF or RF
+
+plot_AvgXYCat_react <- reactive({
+  df <- RelevelFile1.2()
+  
+  # Build common arguments
+  args <- list(
+    data = df,
+    symsize = input$sym_size,
+    TextXAngle = input$text_angle,
+    SmoothType = input$smooth_Type,
+    ErrorType = input$error_typeXY,
+    fontsize = input$font_size,
+    s_alpha = 0,
+    ColSeq = input$colSeq,
+    ColPal = input$colpal,
+    ColRev = input$colRev,
+    Group = input$varsFour,
+    xcol = input$varsOne,
+    ycol = input$varsTwo
+  )
+  
+  # Conditionally add bwid and b_alpha
+  if (input$error_typeXY == "Boxplot") {
+    args$bwid <- input$box_wid
+    args$b_alpha <- input$box_alpha
+    args$l_alpha <- input$line_alpha
+  }
+  
+  ## Conditionally add error bar related arguments
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95")){
+    args$m_alpha <- input$mean_alpha
+    args$meansize <- input$mean_size
+    args$ewid <- input$ewidXY
+    args$l_alpha <- input$line_alpha
+    args$e_alpha <- input$e_alpha
+  }
+  
+  ## Conditionally add smooth related arguments
+  if (input$smooth_Type != "none"){
+    args$sm_alpha <- input$sm_alpha
+    args$l_alpha <- input$line_alpha
+  }
+  
+  # Add log transformations if specified
+  if (input$logTrans %in% c("log10", "log2")) {
+    args$LogYTrans <- input$logTrans
+  }
+  if (input$logTransX %in% c("log10", "log2")) {
+    args$LogXTrans <- input$logTransX
+  }
+  
+  ### arguments for new plot_xy_Group
+  
+  # Generate plot
+  p <- do.call(plot_xy_Group, args, quote = FALSE)
+  
+  # Add title
+  title_text <- paste("Plot of", input$varsOne, "vs", input$varsTwo, "grouped by", input$varsFour)
+  
+  if (input$logTrans %in% c("log10", "log2") && input$logTransX %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X & Y-axis)")
+  } else if (input$logTrans %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log Y-axis)")
+  } else if (input$logTransX %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X-axis)")
+  }
+  
+  p + labs(title = title_text)+
+    geom_point(aes(fill = !!input$varsFour,
+                   x = !!input$varsOne,
+                   y = !!input$varsTwo,
+                   size = !!input$varsSix),
+               shape = 21)+
+    scale_size(range = c(2, 10))
+  
+})
+
+##### copilot code end
+
+##### copilot (edited) code start
+plot_AvgXYNum_react <- reactive({
+  df <- file1()
+  observe(input$XYBox)
+  
+  # Build common arguments
+  args <- list(
+    data = df,
+    symsize = input$sym_size,
+    TextXAngle = input$text_angle,
+    SmoothType = input$smooth_Type,
+    ErrorType = input$error_typeXY,
+    fontsize = input$font_size,
+    s_alpha = 0,
+    ColSeq = input$colSeq,
+    ColPal = input$colpal,
+    ColRev = input$colRev,
+    Group = input$varsFour,
+    xcol = input$varsOne,
+    ycol = input$varsTwo
+  )
+  
+  # Conditionally add bwid and b_alpha
+  if (input$error_typeXY == "Boxplot") {
+    args$bwid <- input$box_wid
+    args$b_alpha <- input$box_alpha
+    args$l_alpha <- input$line_alpha
+  }
+  
+  ## Conditionally add error bar related arguments
+  if (input$error_typeXY %in% c("SD", "SEM", "CI95")){
+    args$m_alpha <- input$mean_alpha
+    args$meansize <- input$mean_size
+    args$ewid <- input$ewid
+    args$l_alpha <- input$line_alpha
+    args$e_alpha <- input$e_alpha
+  }
+  
+  ## Conditionally add smooth related arguments
+  if (input$smooth_Type != "none"){
+    args$sm_alpha <- input$sm_alpha
+    args$l_alpha <- input$line_alpha
+  }
+  
+  # Add log transformations if specified
+  if (input$logTrans %in% c("log10", "log2")) {
+    args$LogYTrans <- input$logTrans
+  }
+  if (input$logTransX %in% c("log10", "log2")) {
+    args$LogXTrans <- input$logTransX
+  }
+  
+  ### arguments for new plot_xy_Group
+  
+  # Generate plot
+  p <- do.call(plot_xy_Group, args, quote = FALSE)
+  
+  # Add title
+  title_text <- paste("Plot of", input$varsOne, "vs", input$varsTwo, "grouped by", input$varsFour)
+  
+  if (input$logTrans %in% c("log10", "log2") && input$logTransX %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X & Y-axis)")
+  } else if (input$logTrans %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log Y-axis)")
+  } else if (input$logTransX %in% c("log10", "log2")) {
+    title_text <- paste(title_text, "(log X-axis)")
+  }
+  
+  p + labs(title = title_text)+
+    geom_point(aes(fill = !!input$varsFour,
+                   x = !!input$varsOne,
+                   y = !!input$varsTwo,
+                   size = !!input$varsSix),
+               shape = 21)+
+    scale_size(range = c(2, 10))
+  
+})

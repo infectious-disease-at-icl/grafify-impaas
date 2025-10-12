@@ -144,12 +144,15 @@ ui <- bslib::page_navbar(
                         tabPanel(tags$h5("Instructions: Data & Variables"), 
                                  tags$br(),
                                  htmlOutput("Instr_Data")),
-                        tabPanel(tags$h5("Instructions: Graphs"),
+                        tabPanel(tags$h5("Graphs"),
                                  tags$br(),
                                  htmlOutput("Instr_Graphs")),
-                        tabPanel(tags$h5("Instructions: ANOVAs & Comparisons"),
+                        tabPanel(tags$h5("ANOVAs & Comparisons"),
                                  tags$br(),
-                                 htmlOutput("Instr_ANOVA"))
+                                 htmlOutput("Instr_ANOVA")),
+                        tabPanel(tags$h5("FAQs"),
+                                 tags$br(),
+                                 htmlOutput("Instr_FAQs"))
                       ),
             )
             ),
