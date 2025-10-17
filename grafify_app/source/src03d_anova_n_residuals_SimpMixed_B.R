@@ -319,9 +319,9 @@ output$newAvgRF_msg <- renderText({
   # Check AvgRF only if MorS is Mixed
   if (input$MorS == "Mixed") {
     if (input$AvgRF == "Yes") {
-      return("A mixed-effects model will be fit. If there are replicate values within levels of the Random Factor grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, those will be averaged and their means used to fit a random intercepts model. Choose 'No' in Box 9.1 to plot all values without averaging.")
+      return("A mixed-effects model will be fit. If there are replicate values within levels of the Random Factor grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, those will be averaged and their means used to fit a random intercepts model. Choose 'No' in Box 9.2 to plot all values without averaging.")
     } else if (input$AvgRF == "No") {
-      return("A mixed-effects model will be fit. All values within all levels of the Random Factor, grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, will be used to fit a random intercepts model. Choose 'Yes' in Box 9.1 to average them.")
+      return("A mixed-effects model will be fit. All values within all levels of the Random Factor, grouped by Fixed Factor(s) chosen in Boxes 2 and/or 3, will be used to fit a random intercepts model. Choose 'Yes' in Box 9.2 to average them.")
     } else {
       return("Choose whether to average replicates within the Random Factor.")
     }
