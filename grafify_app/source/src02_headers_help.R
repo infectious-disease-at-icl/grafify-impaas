@@ -258,7 +258,7 @@ output$contrasts_head <- renderText({ #in use in ANOVA tab
              "Post-hoc comparisons",
              "</h3>",
              "<h6>",
-             "Note: the ratio is on the original scale.",
+             "Note: the ratio is on the original scale (i.e., back-transformation from log-scale).",
              "</h4>",
              "<h6>",
              "P values are FDR adjusted. Kenward-Roger method for degrees of freedom.",

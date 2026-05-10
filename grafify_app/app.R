@@ -34,6 +34,9 @@ app_path <- normalizePath("app.R")
 #time stamp
 last_updated <- format(file.info(app_path)$mtime, "%d %B %Y, %H:%M") #copilot code 
 
+#has to be after last_updated as it is called in this file
+source("./source/src01e_landing_page_bulletlist.R", local = TRUE) #For landing page bullet list PBrvw
+
 # Define UI for application that draws a histogram
 ui <- bslib::page_navbar(
   #ga G-059EWJ6910 for shiny.io
@@ -77,31 +80,19 @@ ui <- bslib::page_navbar(
                           width = "70%"), 
                  style = "text-align: center;")
       )), 
-      column(5, tagList(tags$div(
-        tags$h5("grafify"), 
-        tags$ul(tags$li(
-          tags$h6(
-            "You can use grafify online to plot graphs, and easily perform ANOVAs and post-hoc comparisons just like the ",
-            tags$a(href = "https://grafify-vignettes.netlify.app/", "R package.")
-          )
-        ), tags$li(
-          tags$h6(
-            "The main advantages of grafify are the use of ggplot2 and various colourblind-friendly palettes, and easy access to linear models and linear mixed effects analyses for ANOVAs. These are more powerful and appropriate when experiments are designed as randomised blocks or have repeated measures."
-          ), 
-        ), tags$h6(
-          "grafify online on this website is made possible through Impaas (Imperial Platform as a Service), courtesy of",
-          tags$a(href = "https://edtech.pages.doc.ic.ac.uk/", " Robert Chatley and Jason Bailey, Department of Computing, Imperial College London.")
-        ),
-        tags$li(p(paste("Last updated on:", last_updated))),)
-      ))), 
+      column(5, 
+             landing_info), #from src01e_landing_page_bulletlist.R PBrvw
       column(3, card(
           card_header(
-            tags$h5("Start here"),
+            div(class = "d-flex flex-column",
+                tags$h5("Start here"),
+                tags$h6("Click 'Start' to try example data or first upload your data.", 
+                        class = "text-muted mt-1")),
             #start button
             class = "d-flex justify-content-between",
             tooltip(
               bs_icon("info-circle"),
-              "Upload a csv or Excel file & click 'Start', or click 'Start' to use example data, and see dropdown menus for choosing variables."
+              "Columns from data table will appear in dropdown menus for choosing variables for the graph."
             )
           ),
           #textOutput("started"),
@@ -109,7 +100,7 @@ ui <- bslib::page_navbar(
             "file1",
             #file upload
             placeholder = "Path to file",
-            "Upload a CSV or Excel File",
+            "Upload a CSV or Excel File (max 20 columns & 20 k rows).",
             accept = c(".csv", ".xlsx", ".xls")
           ),
           uiOutput("sheetSelector"), #from app.R
@@ -178,7 +169,15 @@ ui <- bslib::page_navbar(
   ),
   
   #favicon for browswers in www folder
-  tags$head(tags$link(rel = "shortcut icon", href = "grafify.ico"))
+  tags$head(tags$link(rel = "shortcut icon", href = "grafify.ico")),
+  
+  #for copying code
+  tags$script(HTML("
+  Shiny.addCustomMessageHandler('copy-to-clipboard', function(msg) {
+    navigator.clipboard.writeText(msg);
+  });
+"))
+  
 )
 
 # server logic
@@ -203,9 +202,32 @@ server <- function(input, output, session) {
     } else {
       stop("Unsupported file type")
     }
+    
+    #### PBrvw
+    #limit file size
+    validate(
+      need(nrow(file1) <= 20000,
+           "Dataset too large (>20,000 rows). Please downsample your data."),
+      need(ncol(file1) <= 20,
+           "Too many columns (>20). Please keep only relevant variables.")
+    )
+    
+    # replace space etc with _
+    original_names <- names(file1)
+    names(file1) <- gsub("\\.+", "_",
+                         make.names(names(file1), unique = TRUE))
+    
+    if (!identical(original_names, names(file1))) {
+      showNotification(
+        "Column names adjusted for compatibility with R (spaces/special characters replaced).",
+        type = "message",
+        duration = 10
+      )
+    }
     file1
   })
-  
+
+  ###
   #sheet selector UI for Excel file
   output$sheetSelector <- renderUI({
     req(input$file1)
@@ -588,9 +610,13 @@ server <- function(input, output, session) {
     #get levels within categorical X-axis
     req(file1())
     f <- file1()
-    ############ always on relevel
+    ############ always on relevel #PBrvw for Xcat & CatNum
+    if(CatGp()){
     f[[input$varsFour]] <- factor(f[[input$varsFour]], levels = input$varsReLevelGp)
     flev <- levels(f[[input$varsFour]])
+    } else {
+      flev <- input$varsReLevelGp
+    }
     flev
   })
   
@@ -605,15 +631,40 @@ server <- function(input, output, session) {
     ######### relevel with dplyr
     req(input$varsReLevel, input$varsReLevelGp)
     observe(input$addVarsOpt)
-    if(is.numeric(file1()[[input$varsOne]]) || 
+    #### copilot PBrvw to allow X-categorical & Grouping Numeric to also plot 2way ANOVA
+    # ---- CASE 1: both numeric → do nothing
+
+    if(is.numeric(file1()[[input$varsOne]]) &
        is.numeric(file1()[[input$varsFour]]) ) {
       return(file1())
     }
-    file1() %>% 
+    
+    #---- CASE 2: X categorical, grouping numeric → filter grouping only
+    
+    if (!is.numeric(file1()[[input$varsOne]]) &
+        is.numeric(file1()[[input$varsFour]])) {
+      gp_vals <- suppressWarnings(as.numeric(input$varsReLevelGp))
+      return(
+        file1() %>%
+          filter(
+            get(input$varsOne) %in% input$varsReLevel,
+            get(input$varsFour) %in% gp_vals
+          ) %>%
+          mutate(
+            across(all_of(input$varsOne),
+                   ~factor(.x, levels = input$varsReLevel))
+          )
+        )
+    }
+    
+    # ---- CASE 3: both categorical → filter + relevel
+    if (!is.numeric(file1()[[input$varsOne]]) &
+        !is.numeric(file1()[[input$varsFour]])) {
+      file1() %>% 
       filter(get(input$varsOne) %in% input$varsReLevel,
              get(input$varsFour) %in% input$varsReLevelGp) %>% 
       mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)),
-             across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))
+             across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))}
     })
   
   #Update/relevel X axis vars1 groups and get new table
@@ -857,31 +908,93 @@ server <- function(input, output, session) {
   #output$plotChosenGraph <- renderPlot({ whichplotChosenGraph() })
   
   #add single colour on chosen graph if user selects one
+#  PlotSingCol <- eventReactive(input$makegraph, {
+#    ifelse(input$facetingOpt == "Yes",
+#           p <- whichplotChosenGraph() +
+#             facet_grid(FacVars(),
+#                        scales = input$facet_scales),
+#           p <- whichplotChosenGraph())
+#    if(input$addVarsOpt == "Yes" & 
+#       Xnum() == FALSE & 
+#       CatGp() == TRUE){singColnum <- CatGplevels()}
+#    if(input$addVarsOpt == "No" & 
+#       Xnum() == FALSE) {singColnum <- Xlevels()}
+#    
+#    #input$colPick from src01PanelGraphs_card8.R
+#    #also in src03d_anova_n_residuals_SimpleMixed...
+#    #also in src15_AvgRF_graphs
+#    ifelse (input$colPick == "No" , 
+#            p <- p,
+#            p <- p +
+#              #input$colPick2 from src01PanelGraphs_card8.R
+#              #also used in src03d_anova_n_residuals_SimpleMixed...
+#              scale_fill_manual(values = rep(input$colPick2, 
+#                                             times = singColnum)))
+#    p
+#  })
+  
+###############
+  ### 08052026 PBrvw
+  # no ifelse()
+  # better handling of rep()
+  source("./source/src01i_graf_call_helper.R",
+         local = TRUE,
+         echo = TRUE)
+  
   PlotSingCol <- eventReactive(input$makegraph, {
-    ifelse(input$facetingOpt == "Yes",
-           p <- whichplotChosenGraph() +
-             facet_grid(FacVars(),
-                        scales = input$facet_scales),
-           p <- whichplotChosenGraph())
-    if(input$addVarsOpt == "Yes" & 
-       Xnum() == FALSE & 
-       CatGp() == TRUE){singColnum <- CatGplevels()}
-    if(input$addVarsOpt == "No" & 
-       Xnum() == FALSE) {singColnum <- Xlevels()}
     
-    #input$colPick from src01PanelGraphs_card8.R
-    #also in src03d_anova_n_residuals_SimpleMixed...
-    #also in src15_AvgRF_graphs
-    ifelse (input$colPick == "No" , 
-            p <- p,
-            p <- p +
-              #input$colPick2 from src01PanelGraphs_card8.R
-              #also used in src03d_anova_n_residuals_SimpleMixed...
-              scale_fill_manual(values = rep(input$colPick2, 
-                                             times = singColnum)))
+    p <- whichplotChosenGraph()
+    
+    if (input$facetingOpt == "Yes") {
+      p <- p + facet_grid(FacVars(), scales = input$facet_scales)
+    }
+    
+    singColnum <- NULL
+    
+    if (input$addVarsOpt == "Yes" &&
+        !Xnum() &&
+        CatGp()) {
+      singColnum <- CatGplevels()
+    }
+    
+    if (input$addVarsOpt == "No" &&
+        !Xnum()) {
+      singColnum <- Xlevels()
+    }
+    
+    if (input$colPick != "No" && !is.null(singColnum)) {
+      cols <- rep(as.character(input$colPick2), length.out = singColnum)
+      p <- p + scale_fill_manual(values = cols)
+    }
+    
     p
   })
   
+  
+  grafify_code_ev <- eventReactive(input$makegraph, {
+    
+    code <- get_grafify_call(input)
+    
+    # ---- format to one argument per line ----
+    #code <- gsub("\\(", "(\n  ", code)
+    #code <- gsub(", ", ",\n  ", code)
+    #code <- gsub("\\)$", "\n)", code)
+    
+    code
+    
+  })
+  # for copying grafify:: code
+  observeEvent(input$copy_code, {
+    code <- grafify_code_ev()
+    session$sendCustomMessage("copy-to-clipboard", code)
+  })
+
+  output$grafify_code <- renderText({
+    req(grafify_code_ev())
+    grafify_code_ev()
+  })
+  
+############  
   #main UI output of graph
   output$plotChosenGraph <- renderPlot({
     PlotSingCol()
