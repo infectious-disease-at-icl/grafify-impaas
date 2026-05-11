@@ -78,7 +78,7 @@ fluidRow(
       font-size: 18px;
     "
            ),
-           "This is the basic grafify R code for the graph (without faceting and other display options. Replace data with your data table. Press to copy code."
+           "This is the basic grafify R code for the graph. Replace data with your data table. Press to copy code."
          ),
          verbatimTextOutput("grafify_code")))
 )

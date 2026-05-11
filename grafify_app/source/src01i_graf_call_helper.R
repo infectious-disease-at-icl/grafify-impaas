@@ -9,8 +9,8 @@ get_grafify_call <- function(input) {
   y_arg <- paste0("ycol = ", input$varsTwo)
   
   # optional inputs
-  shape_var <- if (!is.null(input$varsThree)) paste0(input$varsThree) else NULL
-  group_var <- if (!is.null(input$varsFour)) paste0(input$varsFour) else NULL
+  shape_var <- if (input$ShapesOpt == "Yes" && !is.null(input$varsThree)) paste0(input$varsThree) else NULL
+  group_var <- if (input$addVarsOpt == "Yes" && !is.null(input$varsFour)) paste0(input$varsFour) else NULL
   
   #colour palette
   colpal_part <- if (input$colPick == "Yes") {

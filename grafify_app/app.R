@@ -946,7 +946,17 @@ server <- function(input, output, session) {
     p <- whichplotChosenGraph()
     
     if (input$facetingOpt == "Yes") {
-      p <- p + facet_grid(FacVars(), scales = input$facet_scales)
+      p <- p + facet_grid(FacVars(), 
+                          scales = input$facet_scales)
+      ### PBrvw collect faceting code
+      facet_code <- paste0(
+        " + facet_grid(",
+        deparse(FacVars()),
+        ", scales = '", input$facet_scales, "')"
+      )
+    # attach faceting code to plot object
+    attr(p, "facet_code") <- facet_code
+    
     }
     
     singColnum <- NULL
@@ -979,8 +989,8 @@ server <- function(input, output, session) {
     #code <- gsub("\\(", "(\n  ", code)
     #code <- gsub(", ", ",\n  ", code)
     #code <- gsub("\\)$", "\n)", code)
-    
-    code
+    facet_code <- attr(PlotSingCol(), "facet_code")
+    paste0(code, facet_code)
     
   })
   # for copying grafify:: code

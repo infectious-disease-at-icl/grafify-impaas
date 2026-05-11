@@ -55,7 +55,7 @@ Panel_Graphs <- list(fluidRow(
                   class = "text-muted mt-1")),
           tooltip(
             bs_icon("info-circle"),
-            "The height of this panel can be increased and the sidebar is collapsible. The appearance of graphs depends on your screen size and does not match the downloaded PDF. Use Height and Width options to resize PDFs. The basic grafify R code for the graph appears below (without faceting or appearance options)."
+            "The height of this panel can be increased and the sidebar is collapsible. The appearance of graphs depends on your screen size and does not match the downloaded PDF. Use Height and Width options to resize PDFs. The basic grafify R code for the graph appears below (without appearance options)."
           ),
           class = "d-flex justify-content-between"
         ),
