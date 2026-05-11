@@ -84,7 +84,7 @@ ui <- bslib::page_navbar(
              landing_info), #from src01e_landing_page_bulletlist.R PBrvw
       column(3, card(
           card_header(
-            div(class = "d-flex flex-column",
+            div(class = "d-flex flex-column", #PBrvw more info
                 tags$h5("Start here"),
                 tags$h6("Click 'Start' to try example data or first upload your data.", 
                         class = "text-muted mt-1")),

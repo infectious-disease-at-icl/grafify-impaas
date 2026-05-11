@@ -289,7 +289,7 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
       tags$li(
           "If you would like to use example data, click", tags$strong("Start"), " directly and proceed to choosing variables."
         ),
-      tags$li(tags$strong("Important: column names should not have space between words. Please use an `_` (underscore) instead. You may have to edit the name later when you prepare figures in Powerpoint or other software you use."))),
+      tags$li(tags$strong("Important: column names should not have space between words or begin with a number or `.` (dot). Please use an `_` (underscore) instead. Special characters (+, -, parenthesis, $) will be automatically replaced with `_` to avoid errors."))),
       tags$li(
         "Your data should be in long format. If you are not familiar with long-format tables, see the image below for an example of a long-format table."
       ),
@@ -684,13 +684,14 @@ output$Instr_FAQs <- renderText({ #in use
     tags$br(),
     tags$h5("Tips to avoid errors:"),
     tags$ol(
-      tags$li(
-        "Ensure that the data is correctly formatted with no spaces in column names (instead use an underscore '_' to separate words). Some special characters, such as Greek letters, may also cause errors."),
-      tags$li(
-        "If there is an error, reload the app (reload/refresh the page). Repeatedly chaning variables and performing analyes may also lead to errors. Analyses errors may be due to missing values in data table"),
-      tags$li(
-        "Analyses does not produce ANOVA tables or graphs: this may be because you did not first plot a graph of the data in the Graphs tab."),
-      tags$li("Two-way analysis failed: is your grouping variable (Box 3.1) entered as numbers in the data table (e.g., Time in min or years or other units), even though you meant to use these as categorical groups? Enter them as alphanumeric values (e.g., 10min, 20min; y20204, y2025 and so on) so that the app does not assume it to be numeric.")
+      tags$li(tags$strong("Data upload error: "),
+        "Ensure that the data is correctly formatted with no spaces in column names (instead use an underscore '_' to separate words). Some special characters, such as Greek letters, may also cause errors. There is also a limit of up to 20 columns and 20k rows of data."),
+      tags$li(tags$strong("App disconnected/stopped: "),
+        "If there is an error, reload the app (reload/refresh the page). Repeatedly changing variables and performing analyes may also lead to errors. Analyses errors may be due to missing values in data table"),
+      tags$li(tags$strong("No graph or ANOVA result: "),
+        "This may be because you did not first plot a graph of the data in the Graphs tab. Ensure you click the required 'action buttons', like 'Variables chosen', 'grafify my data', 'Analyse my data', in that order."),
+      tags$li(tags$strong("Two-way ANOVA analysis failed: "),
+        "Is your grouping variable (Box 3.1) entered as numbers in the data table (e.g., Time in min or years or other units), even though you meant to use these as categorical groups? Enter them as alphanumeric values (e.g., 10min, 20min; y20204, y2025 and so on) so that the app does not assume it to be numeric.")
     ))
     
   ))
