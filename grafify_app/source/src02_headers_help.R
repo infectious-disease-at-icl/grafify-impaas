@@ -289,7 +289,7 @@ output$Instr_Data <- renderText({ #in use in Instructions Data tab
       tags$li(
           "If you would like to use example data, click", tags$strong("Start"), " directly and proceed to choosing variables."
         ),
-      tags$li(tags$strong("Important: column names should not have space between words or begin with a number or `.` (dot). Please use an `_` (underscore) instead. Special characters (+, -, parenthesis, $) will be automatically replaced with `_` to avoid errors."))),
+      tags$li(tags$strong("Important: column names should not have space between words or begin with a number or `.` (dot). Please use an `_` (underscore) instead. Special characters (e.g., +, -, $, parentheses) will be automatically replaced with `_` to avoid errors."))),
       tags$li(
         "Your data should be in long format. If you are not familiar with long-format tables, see the image below for an example of a long-format table."
       ),
