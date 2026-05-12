@@ -23,6 +23,9 @@ library(dplyr)        #for mutate
 #font_add("Courier", "www/fonts/cour.ttf")
 #showtext_auto()
 
+#biology data as default - PBrvw
+default_data <- readr::read_csv("./source/cell_death.csv")
+
 #source files for UI parts
 source("./source/src01e_menu_links.R", local = TRUE) #menus on navbar
 source("./source/src01eFeb08_mainbar_parts.R", local = TRUE) #main page tabsets
@@ -193,7 +196,7 @@ server <- function(input, output, session) {
     #options if file is csv, excel or null
     if (is.null(inFile)) {
       #use 2way ANOVA file
-      file1 <- ggplot2::mpg
+      file1 <- default_data #PBrvw biology data
     } else if (file_ext == "csv") {
       file1 <- read_csv(inFile$datapath)
     } else if (file_ext %in% c("xlsx", "xls")) {
