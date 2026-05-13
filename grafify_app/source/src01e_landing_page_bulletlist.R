@@ -11,8 +11,8 @@ landing_info <- list(tagList(tags$div(
     ), 
   ), 
   ### PBrvw for Shiny live only - start
-  tags$li(tags$h6(tags$strong("Please use Firefox browser on this website as other browsers currently fail to download PDF graphs."))),
-  tags$li(tags$h6(tags$strong("Privacy note:"), "This version of the app is based on", tags$a(href = "https://posit-dev.github.io/r-shinylive/", " Shinylive"), " and runs entirely in your browser. Uploaded data are processed locally and not transmitted to our servers.")), 
+  #tags$li(tags$h6(tags$strong("Please use Firefox browser on this website as other browsers currently fail to download PDF graphs."))),
+  #tags$li(tags$h6(tags$strong("Privacy note:"), "This version of the app is based on", tags$a(href = "https://posit-dev.github.io/r-shinylive/", " Shinylive"), " and runs entirely in your browser. Uploaded data are processed locally and not transmitted to our servers.")), 
   #### for Shiny live only - end
   
   tags$li(
@@ -30,7 +30,7 @@ landing_info <- list(tagList(tags$div(
       "Access resources on ", tags$a(href = "https://biostats.shenoylab.com/", "statistics for biologists"), " and getting started with ", tags$a(href = "https://rcoding.shenoylab.com/", "R programming."))),
   
   ### shiny app --- start PBrvw
-#    tags$li(tags$h6(tags$strong("Privacy note:"), "This version is a", tags$a(href = "https://www.shinyapps.io/", " Shiny app"), ". Data are uploaded temporarily to servers (Posit Cloud via HTTPS), but they are not retained beyond the active user session. Consider installing grafify online locally from our ", tags$a(href = "https://github.com/ashenoy-cmbi/grafifyonline.shinyapp.plosbiol", "GitHub repo"), " or the Windows app for analysing sensitive data.")), 
+    tags$li(tags$h6(tags$strong("Privacy note:"), "This version is a", tags$a(href = "https://www.shinyapps.io/", " Shiny app"), ". Data are uploaded temporarily to servers (Posit Cloud via HTTPS), but they are not retained beyond the active user session. Consider installing grafify online locally from our ", tags$a(href = "https://github.com/ashenoy-cmbi/grafifyonline.shinyapp.plosbiol", "GitHub repo"), " or the Windows app for analysing sensitive data.")), 
   ### shiny app --- end
   
   
