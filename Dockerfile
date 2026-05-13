@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    r-base r-base-dev r-recommended && \
+    r-base=4.4.* r-base-dev=4.4.* r-recommended=4.4.* && \   
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install NLopt from the official GitHub source
