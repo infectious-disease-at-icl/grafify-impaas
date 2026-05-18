@@ -370,6 +370,7 @@ server <- function(input, output, session) {
   #Random variable varsSix reactive Box 9.1
   v6Input <- eventReactive(input$startBtn, {
     req(file1())
+    #req(avgFile1()) #effi fix
     # Variable selection:
     varSelectizeInput(
       inputId = "varsSix",
@@ -379,11 +380,12 @@ server <- function(input, output, session) {
           tags$strong("Random factor for Mixed ANOVA."),
           bs_icon("info-circle")
         ),
-        "Choose a column from your data. Note: a random intercepts model will be fitted."
+        "Choose up to 2 columns from your data. Note: a random intercepts model will be fitted."
       ),
-      data = file1(),
-      multiple = FALSE,
-      options = list(dropdownParent = 'body'),
+      data = file1(), #effi fix
+      multiple = TRUE, #effi fix - subject
+      options = list(dropdownParent = 'body',
+                     maxItems = 2), #effi fix 2 items
       selected = ""
     )
   })
@@ -471,10 +473,10 @@ server <- function(input, output, session) {
   observeEvent(input$graphType, {
     if (input$graphType == "Violin plot")
       updateNumericInput(session = session, 
-        inputId = "box_alpha",
-        min = 0, step = 0.1,
-        max = 1,
-        value = 0
+                         inputId = "box_alpha",
+                         min = 0, step = 0.1,
+                         max = 1,
+                         value = 0
       ) 
     else if (!input$graphType %in% c("Numeric XY 1", "Numeric XY 2")) {
       updateNumericInput(session = session, "box_alpha", value = 1)
@@ -493,7 +495,7 @@ server <- function(input, output, session) {
   })
   
   #effi-end combined observeEvent
-
+  
   #UI output update for textAngle if XY numeric
   observe({
     if (Xnum() == TRUE)
@@ -543,8 +545,8 @@ server <- function(input, output, session) {
     f <- file1()
     ############ always on relevel #PBrvw for Xcat & CatNum
     if(CatGp()){
-    f[[input$varsFour]] <- factor(f[[input$varsFour]], levels = input$varsReLevelGp)
-    flev <- levels(f[[input$varsFour]])
+      f[[input$varsFour]] <- factor(f[[input$varsFour]], levels = input$varsReLevelGp)
+      flev <- levels(f[[input$varsFour]])
     } else {
       flev <- input$varsReLevelGp
     }
@@ -562,7 +564,7 @@ server <- function(input, output, session) {
     #observe(input$addVarsOpt) - #effi-
     #### copilot PBrvw to allow X-categorical & Grouping Numeric to also plot 2way ANOVA
     # ---- CASE 1: both numeric → do nothing
-
+    
     if(is.numeric(file1()[[input$varsOne]]) &
        is.numeric(file1()[[input$varsFour]]) ) {
       return(file1())
@@ -582,17 +584,17 @@ server <- function(input, output, session) {
             across(all_of(input$varsOne),
                    ~factor(.x, levels = input$varsReLevel))
           )
-        )
+      )
     }
     # ---- CASE 3: both categorical → filter + relevel
     if (!is.numeric(file1()[[input$varsOne]]) &
         !is.numeric(file1()[[input$varsFour]])) {
       file1() %>% 
-      filter(get(input$varsOne) %in% input$varsReLevel,
-             get(input$varsFour) %in% input$varsReLevelGp) %>% 
-      mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)),
-             across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))}
-    })
+        filter(get(input$varsOne) %in% input$varsReLevel,
+               get(input$varsFour) %in% input$varsReLevelGp) %>% 
+        mutate(across(all_of(input$varsOne), ~factor(.x, levels = input$varsReLevel)),
+               across(all_of(input$varsFour), ~factor(.x, levels = input$varsReLevelGp)))}
+  })
   
   #Update/relevel X axis vars1 groups and get new table
   #This is for XY1 graphs (categorical vars4)
@@ -702,7 +704,7 @@ server <- function(input, output, session) {
          local = TRUE)
   source("./source/src13_numericXYplot_n_save.R",
          local = TRUE)
-
+  
   #main reactive with conditions for which graph to plot
   # effi - start
   whichplotChosenGraph <- eventReactive(input$makegraph, {
@@ -809,7 +811,7 @@ server <- function(input, output, session) {
     p
   })
   # effi - end
-###############
+  ###############
   ### 08052026 PBrvw
   # no ifelse()
   # better handling of rep()
@@ -829,9 +831,9 @@ server <- function(input, output, session) {
         deparse(FacVars()),
         ", scales = '", input$facet_scales, "')"
       )
-    # attach faceting code to plot object
-    attr(p, "facet_code") <- facet_code
-    
+      # attach faceting code to plot object
+      attr(p, "facet_code") <- facet_code
+      
     }
     
     singColnum <- NULL
@@ -856,7 +858,7 @@ server <- function(input, output, session) {
     subtitle_txt <- NULL
     
     #Mean + error bars plots
-    if (input$graphType %in% c("Bar graph", "Point & errorbars")) {
+    if (input$graphType %in% c("Bar graph", "Point & Errorbar")) {
       err <- input$error_type  # adjust if different input ID
       if (err == "SD") {
         subtitle_txt <- "Mean ± SD shown"
@@ -882,9 +884,14 @@ server <- function(input, output, session) {
       } 
     }
     
-    # Box / violin plots
-    if (input$graphType %in% c("Boxplot", "Violin plot")) {
+    # Box plots
+    if (input$graphType %in% c("Boxplot")) {
       subtitle_txt <- "Median (IQR) and whiskers (1.5xIQR) shown"
+    }
+    
+    # violin plots
+    if (input$graphType %in% c("Violin plot")) {
+      subtitle_txt <- "Median (IQR) and whiskers (1.5xIQR) & data distribution shown"
     }
     
     p <- p + labs(subtitle = subtitle_txt)
@@ -909,13 +916,13 @@ server <- function(input, output, session) {
     code <- grafify_code_ev()
     session$sendCustomMessage("copy-to-clipboard", code)
   })
-
+  
   output$grafify_code <- renderText({
     req(grafify_code_ev())
     grafify_code_ev()
   })
   
-############  
+  ############  
   #main UI output of graph
   output$plotChosenGraph <- renderPlot({
     PlotSingCol()
